@@ -1,0 +1,1174 @@
+---
+title: 'Texas Water Governance System Mapping - Version 1'
+author: "Patrick Bixler, Regina Buono, Ethan Tennison"
+date: "02/19/2021"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+```{r include=FALSE, warning=FALSE}
+source("utils1.R")
+```
+
+```{r Clean Network Data, include=FALSE, warning = FALSE}
+
+#edgelist 
+el1<-el1
+
+
+e1<-as.matrix(el1)
+e1[,1]=as.character(e1[,1])
+e1[,2]=as.character(e1[,2])
+e1[,3]=as.character(e1[,3])
+e1[,4]=as.character(e1[,4])
+e1[,5]=as.character(e1[,5])
+
+g1<-graph_from_data_frame(d=el1,directed=TRUE) 
+#Some stats like communities and clusters need undirected graphs. Mode = collapse creates an undirected link between any pair of connected nodes. 
+#g1<-as.undirected(g1, mode= "collapse")
+
+#Create a nodelist for excel use 
+gvis<-toVisNetworkData(g1)
+nodelist<-gvis$nodes
+nodelist<-nodelist[,1]
+nodelist<-as.data.frame(nodelist)
+names(nodelist)<-c("name")
+
+write.csv(nodelist,file = "nodelist.csv")
+
+# Pull the node list with attributes
+input_attributes<-a1
+
+#Define Attributes
+for (i in 1:vcount(g1))
+{
+V(g1)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1)[i]$name)]
+V(g1)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1)[i]$name)]
+V(g1)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1)[i]$name)]
+}
+
+####Agriculture####
+#new dataframe and igraph object with only "agriculture" ties
+el1_agriculture<-el1[which(el1$sector=="Agriculture"),]
+g1_agriculture<-graph_from_data_frame(d=el1_agriculture,directed=TRUE) 
+e1_agriculture<-as.matrix(el1_agriculture)
+
+####Groundwater####
+#new dataframe and igraph object with only "Groundwater" ties
+el1_groundwater<-el1[which(el1$sector=="Groundwater"),]
+g1_groundwater<-graph_from_data_frame(d=el1_groundwater,directed=TRUE) 
+e1_groundwater<-as.matrix(el1_groundwater)
+
+####Oil and Gas####
+#new dataframe and igraph object with only "Oil and Gas" ties
+el1_oilandgas<-el1[which(el1$sector=="Oil and Gas"),]
+g1_oilandgas<-graph_from_data_frame(d=el1_oilandgas,directed=TRUE) 
+e1_oilandgas<-as.matrix(el1_oilandgas)
+
+####flooding####
+#new dataframe and igraph object with only "flooding" ties
+el1_flooding<-el1[which(el1$sector=="Flooding"),]
+g1_flooding<-graph_from_data_frame(d=el1_flooding,directed=TRUE) 
+e1_flooding<-as.matrix(el1_flooding)
+
+####rural####
+#new dataframe and igraph object with only "rural" ties
+el1_rural<-el1[which(el1$sector=="Rural Utilities"),]
+g1_rural<-graph_from_data_frame(d=el1_rural,directed=TRUE) 
+e1_rural<-as.matrix(el1_rural)
+
+####environment####
+#new dataframe and igraph object with only "environment" ties
+el1_environment<-el1[which(el1$sector=="Environment"),]
+g1_environment<-graph_from_data_frame(d=el1_environment,directed=TRUE) 
+e1_environment<-as.matrix(el1_environment)
+
+####innovation####
+#new dataframe and igraph object with only "innovation" ties
+el1_innovation<-el1[which(el1$sector=="Innovation"),]
+g1_innovation<-graph_from_data_frame(d=el1_innovation,directed=TRUE) 
+e1_innovation<-as.matrix(el1_innovation)
+
+####municipal####
+#new dataframe and igraph object with only "municipal" ties
+el1_municipal<-el1[which(el1$sector=="Municipal"),]
+g1_municipal<-graph_from_data_frame(d=el1_municipal,directed=TRUE) 
+e1_municipal<-as.matrix(el1_municipal)
+```
+
+$~$
+
+## Ego-centric Network Measures
+```{r network statistics, include = FALSE, echo=FALSE, warning=FALSE}
+#Degree in 
+inDegree<-igraph::degree(g1,mode="in")
+outDegree<-igraph::degree(g1,mode="out")
+TotalDegree<-as.data.frame(igraph::degree(g1))
+betweenness<-igraph::betweenness(g1, v = V(g1), directed = TRUE, weights = NULL,
+  nobigint = TRUE, normalized = TRUE)
+inCloseness<-igraph::closeness(g1, vids = V(g1), mode = c("in"),normalized = TRUE)
+outCloseness<-igraph::closeness(g1, vids = V(g1), mode = c("out"),normalized = TRUE)
+#eigen<-evcent(m1,g=1,gmode = "digraph",rescale=TRUE, ignore.eval=TRUE)
+#removed eigen from this DF_Centrality
+DF_Centrality<-as.data.frame(cbind(rownames(TotalDegree),inDegree,outDegree,TotalDegree,betweenness,inCloseness,outCloseness))
+rownames(DF_Centrality)<-NULL
+DF_Centrality<-as.data.frame(DF_Centrality)
+colnames(DF_Centrality)[1]<-"name"
+colnames(DF_Centrality)[4]<-"TotalDegree"
+
+
+ par(mfcol = c(3,3)) 
+ hist(inDegree)
+ hist(outDegree)
+ hist(TotalDegree)
+ hist(betweenness)
+ hist(inCloseness)
+ hist(outCloseness)
+
+dd.g1<-degree.distribution(g1)
+d<-1:max(TotalDegree)-1
+ind<-(dd.g1 != 0)
+plot(d[ind],dd.g1[ind],log="xy",col="blue",xlab=c("Log-degree"),ylab=c("Log-Intensity"),
+     main="Log-Log Degree Distribution")
+
+txwater_centrality<-merge(DF_Centrality, a1, by = "name")
+write.csv(txwater_centrality,file = "TX Water Centrality.csv")
+
+input_attributes<-txwater_centrality
+
+```
+
+System Map Graphs 
+
+**The Interactions of Policy and Governance Across Texas Water Sectors**
+```{r water all sectors, echo=FALSE, warning=FALSE}
+
+
+nodes<- read_csv("node_coords2.csv")
+nodes <- select(nodes, id, x, y)
+row.names(nodes) <- nodes[['id']]
+
+
+#node attributes
+for (i in 1:vcount(g1))
+{
+#V(g1)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1)[i]$name)]
+V(g1)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1)[i]$name)]
+V(g1)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1)[i]$name)]
+V(g1)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1)[i]$name)]
+}
+
+#V(g1)$size<-V(g1)$size*1.5
+g1_ext <- g1
+
+
+
+E(g1)[E(g1)$sector=="Agriculture"]$color <-"#7be141"
+E(g1)[E(g1)$sector=="Environment"]$color <-"#f6eb14"
+E(g1)[E(g1)$sector=="Flooding"]$color <-"#ad85e4"
+E(g1)[E(g1)$sector=="Groundwater"]$color <-"#00188f"
+E(g1)[E(g1)$sector=="Oil and Gas"]$color <-"#97c2fc"
+E(g1)[E(g1)$sector=="Rural Utilities"]$color <-"#ec008c"
+E(g1)[E(g1)$sector=="Innovation"]$color <-"#00b294"
+E(g1)[E(g1)$sector=="Municipal"]$color <-"#e81123"
+
+ledges <-
+  data.frame(
+    label = c(
+      "Agriculture",
+      "Environment",
+      "Flooding",
+      "Groundwater",
+      "Innovation",
+      "Municipal",
+      "Oil and Gas",
+      "Rural Utilities"
+    ),
+    arrows = c("to"),
+    color = c(
+      "#7be141",
+      "#f6eb14",
+      "#ad85e4",
+      "#00188f",
+      "#97c2fc",
+      "#ec008c",
+      "#00b294",
+      "#e81123"
+    )
+  )
+
+
+V(g1)[which(V(g1)$type=="Government")]$color<-"#f8f8ff"
+V(g1)[which(V(g1)$type=="NGO")]$color<-"#f8f8ff"
+V(g1)[which(V(g1)$type=="Private")]$color<-"#f8f8ff"
+V(g1)[which(V(g1)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1)[which(V(g1)$type=="Physical Feature")]$color<-"#f8f8ff"
+V(g1)[which(V(g1)$type=="Academic")]$color<-"#f8f8ff"
+V(g1)[which(V(g1)$type=="Public")]$color<- "#f8f8ff"
+
+V(g1)[which(V(g1)$level=="Local")]$shape<-"dot"
+V(g1)[which(V(g1)$level=="Regional")]$shape<-"triangle"
+V(g1)[which(V(g1)$level=="Statewide")]$shape<-"square"
+V(g1)[which(V(g1)$level=="Nationwide")]$shape<-"diamond"
+
+
+lnodes <-
+  data.frame(
+    label = c(
+      "Local",
+      "Regional",
+      "Statewide",
+      "Nationwide"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "triangle",
+      "square",
+      "diamond"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black", 
+      "black"
+    )
+  )
+
+gvis <- toVisNetworkData(g1)
+nodelist <- gvis$nodes
+viz_all <-
+  visNetwork(
+    sort(gvis$nodes),
+    gvis$edges,
+    main = "Policy and Governance Across Texas Water Sectors",
+    width = "100%",
+    height = "850px"
+  ) %>%
+  visEdges(
+    smooth = T,
+    arrows = list(to = list(
+      enabled = TRUE, scaleFactor = .5
+    )),
+    color = list(highlight = "black")
+  ) %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visNodes(color = list(
+    background = "white",
+    border = "black",
+    highlight = list(background = "#A9A9A9", border = "black"),
+    hover = list(background = "#A9A9A9", border = "black")
+  )) %>%
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth = FALSE,
+                  physics = FALSE,
+                  layout = "layout_with_fr",
+                  randomSeed = 27) %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visOptions(
+    selectedBy = list(variable = c("type"), multiple = TRUE),
+    highlightNearest = list(enabled = T, hover = T),
+    nodesIdSelection = TRUE
+  ) %>%
+  addFontAwesome() %>%
+  visLegend(
+    position = "left",
+    addNodes = lnodes,
+    addEdges = ledges,
+    useGroups = FALSE,
+    stepY = 100
+  ) 
+  
+  
+viz_all$x$nodes <- viz_all$x$nodes %>% left_join(nodes, by = 'id') %>% select(-c('x.x', 'y.x')) %>% rename(x = x.y, y=y.y)
+
+viz_all
+```
+
+```{r all_network, message=FALSE, warning=FALSE, include=FALSE}
+
+gvis_ext <- toVisNetworkData(g1_ext)
+
+allnodes <- gvis_ext$nodes
+allnodes <- allnodes %>% rename(group = type)
+
+alledges <- gvis_ext$edges
+
+viz <- visNetwork(allnodes, alledges, main = "Policy and Governance Across Texas Water Sectors",
+    width = "100%",
+    height = "700") %>%
+  visIgraphLayout(layout = "layout_with_fr", physics = FALSE, randomSeed = 27) %>% 
+  visEdges(
+    smooth = F,
+    arrows = "to") %>%
+  visOptions(
+    selectedBy = list(variable = c("group"), multiple = TRUE),
+    highlightNearest = list(enabled = T, hover = T),
+    nodesIdSelection = TRUE
+  ) %>% 
+  visLegend(useGroups = TRUE)
+
+#visSave(viz, "media/simplied_all_network.html", selfcontained = TRUE, background = "white")
+
+```
+
+
+**Agriculture**
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_agriculture))
+{
+V(g1_agriculture)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1_agriculture)[i]$name)]
+V(g1_agriculture)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1_agriculture)[i]$name)]
+V(g1_agriculture)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1_agriculture)[i]$name)]
+V(g1_agriculture)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_agriculture)[i]$name)]
+}
+
+
+E(g1_agriculture)[E(g1_agriculture)$type=="Money"]$color <-"#7be141" #18% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Information"]$color <-"#f6eb14" #18% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Membership"]$color <-"#ad85e4" #%11% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Lobbying"]$color <-"#00188f" #10% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Water"]$color <-"#97c2fc" #8% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Water sales"]$color <-"#e81123" #25% of ties in AG
+
+
+
+ledges_ag <-
+  data.frame(
+    label = c(
+      "Money",
+      "Information",
+      "Membership",
+      "Lobbying",
+      "Water",
+      "Regulation",
+      "Water Sales",
+      "Other"
+    ),
+    arrows = c("to"),
+    color = c(
+      "#7be141",
+      "#f6eb14",
+      "#ad85e4",
+      "#00188f",
+      "#97c2fc",
+      "#ec008c",
+      "#e81123",
+      "gray"
+    )
+  )
+
+V(g1_agriculture)[which(V(g1_agriculture)$type=="Government")]$color<-"#f8f8ff"
+V(g1_agriculture)[which(V(g1_agriculture)$type=="NGO")]$color<-"#f8f8ff"
+V(g1_agriculture)[which(V(g1_agriculture)$type=="Private")]$color<-"#f8f8ff"
+V(g1_agriculture)[which(V(g1_agriculture)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1_agriculture)[which(V(g1_agriculture)$type=="Academic")]$color<-"#f8f8ff"
+V(g1_agriculture)[which(V(g1_agriculture)$type=="Public")]$color<-"#f8f8ff"
+
+ V(g1_agriculture)[which(V(g1_agriculture)$level=="Local")]$shape<-"dot"
+ V(g1_agriculture)[which(V(g1_agriculture)$level=="Regional")]$shape<-"triangle"
+ V(g1_agriculture)[which(V(g1_agriculture)$level=="Statewide")]$shape<-"square"
+
+
+lnodes_ag <-
+  data.frame(
+    label = c(
+      "Local",
+      "Regional",
+      "Statewide"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "triangle",
+      "square"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black"
+    )
+  )
+
+gvis_agriculture<-toVisNetworkData(g1_agriculture)
+edges <- gvis_agriculture$edges
+edges <- edges %>% replace_na(list(color = "gray"))
+
+
+viz_ag<-visNetwork(sort(gvis_agriculture$nodes),edges, main="Agriculture",width = "100%",height = "850px") %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visNodes(font=list(size = 16)) %>%
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr", randomSeed = 27) %>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("type"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addEdges = ledges_ag, addNodes = lnodes_ag, useGroups = FALSE,stepY=100)
+
+viz_ag
+
+```
+
+**Energy Sector**
+```{r oil and gas, echo=FALSE, warning=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_oilandgas))
+{
+V(g1_oilandgas)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1_oilandgas)[i]$name)]
+V(g1_oilandgas)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1_oilandgas)[i]$name)]
+V(g1_oilandgas)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1_oilandgas)[i]$name)]
+V(g1_oilandgas)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_oilandgas)[i]$name)]
+}
+
+
+E(g1_oilandgas)[E(g1_oilandgas)$type=="Information"]$color <-"#f6eb14" #18% of all ties
+E(g1_oilandgas)[E(g1_oilandgas)$type=="Lobbying"]$color <-"#00188f" #10% of all ties
+E(g1_oilandgas)[E(g1_oilandgas)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
+E(g1_oilandgas)[E(g1_oilandgas)$type=="Water sales"]$color <-"#e81123" #25% of ties in AG
+
+
+ledges_og <-
+  data.frame(
+    label = c(
+      "Information",
+      "Lobbying",
+      "Regulation",
+      "Water Sales",
+      "Other"
+    ),
+    arrows = c("to"),
+    color = c("#f6eb14", "#00188f", "#ec008c", "#e81123", "gray")
+  )
+
+
+
+V(g1_oilandgas)[which(V(g1_oilandgas)$type=="Government")]$color<-"#f8f8ff"
+V(g1_oilandgas)[which(V(g1_oilandgas)$type=="NGO")]$color<-"#f8f8ff"
+V(g1_oilandgas)[which(V(g1_oilandgas)$type=="Private")]$color<-"#f8f8ff"
+V(g1_oilandgas)[which(V(g1_oilandgas)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1_oilandgas)[which(V(g1_oilandgas)$type=="Physical Feature")]$color<-"#f8f8ff"
+V(g1_oilandgas)[which(V(g1_oilandgas)$type=="Academic")]$color<-"#f8f8ff"
+V(g1_oilandgas)[which(V(g1_oilandgas)$type=="Public")]$color<- "#f8f8ff"
+
+V(g1_oilandgas)[which(V(g1_oilandgas)$level=="Local")]$shape<-"dot"
+V(g1_oilandgas)[which(V(g1_oilandgas)$level=="Regional")]$shape<-"triangle"
+V(g1_oilandgas)[which(V(g1_oilandgas)$level=="Statewide")]$shape<-"square"
+V(g1_oilandgas)[which(V(g1_oilandgas)$level=="Nationwide")]$shape<-"diamond"
+
+
+lnodes_og <- 
+  data.frame(
+    label = c(
+      "Local",
+      "Regional",
+      "Statewide"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "triangle",
+      "square"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black"
+    )
+  )
+
+gvis_oilandgas<-toVisNetworkData(g1_oilandgas)
+edges <- gvis_oilandgas$edges
+edges <- edges %>% replace_na(list(color = "gray"))
+
+nodelist_agriclulture<-gvis_oilandgas$nodes
+viz_oil <- visNetwork(sort(gvis_oilandgas$nodes),edges, main="Energy",width = "100%",height = "850px") %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .4)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr", randomSeed = 28) %>%
+  visNodes(font=list(size = 16)) %>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("type"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left", addNodes = lnodes_og, addEdges = ledges_og, useGroups = FALSE,stepY=100)
+
+
+viz_oil
+```
+
+
+**Environment and Environmental Flows**
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_environment))
+{
+V(g1_environment)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1_environment)[i]$name)]
+V(g1_environment)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1_environment)[i]$name)]
+V(g1_environment)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1_environment)[i]$name)]
+V(g1_environment)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_environment)[i]$name)]
+}
+
+
+E(g1_environment)[E(g1_environment)$type=="Information"]$color <-"#f6eb14" #18% of all ties
+E(g1_environment)[E(g1_environment)$type=="Lobbying"]$color <-"#00188f" #10% of all ties
+E(g1_environment)[E(g1_environment)$type=="Cooperation/coordination"]$color <-"#004e24" #40% of ENV ties
+E(g1_environment)[E(g1_environment)$type=="Advocacy/Policy Preference"]$color <-"#c77adb" #40% of ENV ties
+
+
+ledges_env <-
+  data.frame(
+    label = c(
+      "Information",
+      "Lobbying",
+      "Coordination",
+      "Advocacy" ,
+      "Other"
+    ),
+    arrows = c("to"),
+    color = c("#f6eb14", "#00188f", "#004e24", "#c77adb", "gray")
+  )
+
+
+
+V(g1_environment)[which(V(g1_environment)$type=="Government")]$color<-"#f8f8ff"
+V(g1_environment)[which(V(g1_environment)$type=="NGO")]$color<-"#f8f8ff"
+V(g1_environment)[which(V(g1_environment)$type=="Private")]$color<-"#f8f8ff"
+V(g1_environment)[which(V(g1_environment)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1_environment)[which(V(g1_environment)$type=="Physical Feature")]$color<-"#f8f8ff"
+V(g1_environment)[which(V(g1_environment)$type=="Academic")]$color<-"#f8f8ff"
+V(g1_environment)[which(V(g1_environment)$type=="Public")]$color<- "#f8f8ff"
+
+
+
+V(g1_environment)[which(V(g1_environment)$level=="Local")]$shape<-"dot"
+V(g1_environment)[which(V(g1_environment)$level=="Regional")]$shape<-"triangle"
+V(g1_environment)[which(V(g1_environment)$level=="Statewide")]$shape<-"square"
+
+
+
+lnodes_env <-
+  data.frame(
+    label = c(
+      "Local",
+      "Regional",
+      "Statewide"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "triangle",
+      "square"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black"
+    )
+  )
+
+
+
+gvis_environment<-toVisNetworkData(g1_environment)
+edges <- gvis_environment$edges
+edges <- edges %>% replace_na(list(color = "gray"))
+
+nodelist_environment<-gvis_environment$nodes
+viz_environment <- visNetwork(sort(gvis_environment$nodes),edges,
+main="Enviornment and Environmental Flows",width = "100%",height = "850px") %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr", randomSeed = 27) %>%
+  visNodes(font=list(size = 16)) %>%
+
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("type"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left", addNodes = lnodes_env, addEdges = ledges_env, useGroups = FALSE,stepY=100)
+
+viz_environment
+```
+
+
+**Flooding**
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_flooding))
+{
+V(g1_flooding)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1_flooding)[i]$name)]
+V(g1_flooding)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1_flooding)[i]$name)]
+V(g1_flooding)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1_flooding)[i]$name)]
+V(g1_flooding)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_flooding)[i]$name)]
+}
+
+E(g1_flooding)[E(g1_flooding)$type=="Money"]$color <-"#7be141" #18% of all ties
+E(g1_flooding)[E(g1_flooding)$type=="Information"]$color <-"#f6eb14" #18% of all ties
+E(g1_flooding)[E(g1_flooding)$type=="Membership"]$color <-"#ad85e4" #%11% of all ties
+
+
+
+ledges_flood <-
+  data.frame(
+    label = c("Money", "Information", "Membership"),
+    arrows = c("to"),
+    color = c("#7be141", "#f6eb14", "#ad85e4")
+  )
+
+
+V(g1_flooding)[which(V(g1_flooding)$type=="Government")]$color<-"#f8f8ff"
+V(g1_flooding)[which(V(g1_flooding)$type=="NGO")]$color<-"#f8f8ff"
+V(g1_flooding)[which(V(g1_flooding)$type=="Private")]$color<-"#f8f8ff"
+V(g1_flooding)[which(V(g1_flooding)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1_flooding)[which(V(g1_flooding)$type=="Physical Feature")]$color<-"#f8f8ff"
+V(g1_flooding)[which(V(g1_flooding)$type=="Academic")]$color<-"#f8f8ff"
+V(g1_flooding)[which(V(g1_flooding)$type=="Public")]$color<- "#f8f8ff"
+
+V(g1_flooding)[which(V(g1_flooding)$level=="Local")]$shape<-"dot"
+V(g1_flooding)[which(V(g1_flooding)$level=="Regional")]$shape<-"triangle"
+V(g1_flooding)[which(V(g1_flooding)$level=="Statewide")]$shape<-"square"
+V(g1_flooding)[which(V(g1_flooding)$level=="Nationwide")]$shape<-"diamond"
+
+
+lnodes_flood <-
+  data.frame(
+    label = c(
+      "Local",
+      "Regional",
+      "Statewide"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "triangle",
+      "square"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black"
+    )
+  )
+
+
+gvis_flooding<-toVisNetworkData(g1_flooding)
+edges <- gvis_flooding$edges
+edges <- edges %>% replace_na(list(color = "gray"))
+
+nodelist_flooding<-gvis_flooding$nodes
+viz_flooding <- visNetwork(sort(gvis_flooding$nodes),edges, main="Flooding",width = "100%",height = "850px") %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .4)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr", randomSeed = 27) %>%
+  visNodes(font=list(size = 20)) %>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("type"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left", addNodes = lnodes_flood, addEdges = ledges_flood, useGroups = FALSE,stepY=100)
+
+#viz_flooding$x$nodes <- viz_flooding$x$nodes %>% left_join(nodes, by = 'id') %>% select(-c('x.x', 'y.x')) %>% rename(x = x.y, y=y.y)
+
+viz_flooding
+```
+
+**Groundwater**
+```{r echo=FALSE}
+#Define Attributes
+for (i in 1:vcount(g1_groundwater))
+{
+V(g1_groundwater)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1_groundwater)[i]$name)]
+V(g1_groundwater)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1_groundwater)[i]$name)]
+V(g1_groundwater)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1_groundwater)[i]$name)]
+V(g1_groundwater)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_groundwater)[i]$name)]
+}
+
+
+
+E(g1_groundwater)[E(g1_groundwater)$type=="Money"]$color <-"#7be141" #18% of all ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Information"]$color <-"#f6eb14" #18% of all ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Membership"]$color <-"#ad85e4" #%11% of all ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Advocacy/Policy Preference"]$color <-"#c77adb" #40% of ENV ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Authority to set rules"]$color <-"#00bcf2"
+
+
+
+ledges_gw <-
+  data.frame(
+    label = c(
+      "Money",
+      "Information",
+      "Membership",
+      "Regulation",
+      "Advocacy",
+      "Authority",
+      "Other"
+    ),
+    arrows = c("to"),
+    color = c(
+      "#7be141",
+      "#f6eb14",
+      "#ad85e4",
+      "#ec008c",
+      "#c77adb",
+      "#00bcf2",
+      "gray"
+    )
+  )
+
+
+
+V(g1_groundwater)[which(V(g1_groundwater)$type=="Government")]$color<-"#f8f8ff"
+V(g1_groundwater)[which(V(g1_groundwater)$type=="NGO")]$color<-"#f8f8ff"
+V(g1_groundwater)[which(V(g1_groundwater)$type=="Private")]$color<-"#f8f8ff"
+V(g1_groundwater)[which(V(g1_groundwater)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1_groundwater)[which(V(g1_groundwater)$type=="Physical Feature")]$color<-"#f8f8ff"
+V(g1_groundwater)[which(V(g1_groundwater)$type=="Academic")]$color<-"#f8f8ff"
+V(g1_groundwater)[which(V(g1_groundwater)$type=="Public")]$color<- "#f8f8ff"
+
+
+V(g1_groundwater)[which(V(g1_groundwater)$level=="Local")]$shape<-"dot"
+V(g1_groundwater)[which(V(g1_groundwater)$level=="Regional")]$shape<-"triangle"
+V(g1_groundwater)[which(V(g1_groundwater)$level=="Statewide")]$shape<-"square"
+
+lnodes_gw <-
+  data.frame(
+    label = c(
+      "Local",
+      "Regional",
+      "Statewide"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "triangle",
+      "square"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black"
+    )
+  )
+
+gvis_groundwater<-toVisNetworkData(g1_groundwater)
+edges <- gvis_groundwater$edges
+edges <- edges %>% replace_na(list(color = "gray"))
+
+nodelist_groundwater<-gvis_groundwater$nodes
+viz_groundwater<-visNetwork(sort(gvis_groundwater$nodes),edges, main="Groundwater",width = "100%",height = "850px") %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr", randomSeed = 28) %>%
+  visNodes(font=list(size = 16)) %>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("type"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left", addNodes = lnodes_gw, addEdges = ledges_gw, useGroups = FALSE,stepY=100)
+
+
+viz_groundwater
+
+```
+
+**Innovation in Texas Water**
+```{r innovation network, echo=FALSE, warning=FALSE}
+#node attributes
+for (i in 1:vcount(g1_innovation))
+{
+V(g1_innovation)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1_innovation)[i]$name)]
+V(g1_innovation)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1_innovation)[i]$name)]
+V(g1_innovation)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1_innovation)[i]$name)]
+V(g1_innovation)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_innovation)[i]$name)]
+}
+
+
+
+E(g1_innovation)[E(g1_innovation)$type=="Money"]$color <-"#7be141" #18% of all ties
+E(g1_innovation)[E(g1_innovation)$type=="Information"]$color <-"#f6eb14" #18% of all ties
+E(g1_innovation)[E(g1_innovation)$type=="Water"]$color <-"#97c2fc" #8% of all ties
+
+
+
+ledges_innovate <-
+  data.frame(
+    label = c("Money", "Information", "Water", "Other"),
+    arrows = c("to"),
+    color = c("#7be141", "#f6eb14", "#97c2fc", "gray")
+  )
+
+
+V(g1_innovation)[which(V(g1_innovation)$type=="Government")]$color<-"#f8f8ff"
+V(g1_innovation)[which(V(g1_innovation)$type=="NGO")]$color<-"#f8f8ff"
+V(g1_innovation)[which(V(g1_innovation)$type=="Private")]$color<-"#f8f8ff"
+V(g1_innovation)[which(V(g1_innovation)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1_innovation)[which(V(g1_innovation)$type=="Physical Feature")]$color<-"#f8f8ff"
+V(g1_innovation)[which(V(g1_innovation)$type=="Academic")]$color<-"#f8f8ff"
+V(g1_innovation)[which(V(g1_innovation)$type=="Public")]$color<- "#f8f8ff"
+
+V(g1_innovation)[which(V(g1_innovation)$level=="Local")]$shape<-"dot"
+V(g1_innovation)[which(V(g1_innovation)$level=="Regional")]$shape<-"triangle"
+V(g1_innovation)[which(V(g1_innovation)$level=="Statewide")]$shape<-"square"
+V(g1_innovation)[which(V(g1_innovation)$level=="Nationwide")]$shape<-"diamond"
+
+
+lnodes_innovate <-
+  data.frame(
+    label = c(
+      "Local",
+      "Regional",
+      "Statewide",
+      "Nationwide"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "triangle",
+      "square",
+      "diamond"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black", 
+      "black"
+    )
+  )
+
+gvis_innovate<-toVisNetworkData(g1_innovation)
+edges <- gvis_innovate$edges
+edges <- edges %>% replace_na(list(color = "gray"))
+
+nodelist_innovate<-gvis_innovate$nodes
+viz_innovate<-visNetwork(sort(gvis_innovate$nodes),edges,main="Innovation in Water",width = "100%",height = "850px") %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr", randomSeed = 27) %>%
+  visNodes(font=list(size = 16)) %>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("type"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addEdges = ledges_innovate, addNodes = lnodes_innovate, useGroups = FALSE, stepY=100) 
+
+viz_innovate
+
+```
+
+
+
+**Municipal Water**
+```{r muni network, echo=FALSE, warning=FALSE}
+#node attributes
+for (i in 1:vcount(g1_municipal))
+{
+V(g1_municipal)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1_municipal)[i]$name)]
+V(g1_municipal)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1_municipal)[i]$name)]
+V(g1_municipal)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1_municipal)[i]$name)]
+V(g1_municipal)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_municipal)[i]$name)]
+}
+
+E(g1_municipal)[E(g1_municipal)$type=="Money"]$color <-"#7be141" #18% of all ties
+E(g1_municipal)[E(g1_municipal)$type=="Information"]$color <-"#f6eb14" #18% of all ties
+E(g1_municipal)[E(g1_municipal)$type=="Water"]$color <-"#97c2fc" #8% of all ties
+E(g1_municipal)[E(g1_municipal)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
+E(g1_municipal)[E(g1_municipal)$type=="Advocacy/Policy Preference"]$color <-"#c77adb" #40% of ENV ties
+
+
+ledges_muni <-
+  data.frame(
+    label = c(
+      "Money",
+      "Information",
+      "Regulation",
+      "Advocacy",
+      "Water",
+      "Other"
+    ),
+    arrows = c("to"),
+    color = c("#7be141", "#f6eb14", "#ec008c", "#c77adb", "#97c2fc", "gray")
+  )
+
+
+V(g1_municipal)[which(V(g1_municipal)$type=="Government")]$color<-"#f8f8ff"
+V(g1_municipal)[which(V(g1_municipal)$type=="NGO")]$color<-"#f8f8ff"
+V(g1_municipal)[which(V(g1_municipal)$type=="Private")]$color<-"#f8f8ff"
+V(g1_municipal)[which(V(g1_municipal)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1_municipal)[which(V(g1_municipal)$type=="Physical Feature")]$color<-"#f8f8ff"
+V(g1_municipal)[which(V(g1_municipal)$type=="Academic")]$color<-"#f8f8ff"
+V(g1_municipal)[which(V(g1_municipal)$type=="Public")]$color<- "#f8f8ff"
+
+V(g1_municipal)[which(V(g1_municipal)$level=="Local")]$shape<-"dot"
+V(g1_municipal)[which(V(g1_municipal)$level=="Regional")]$shape<-"triangle"
+V(g1_municipal)[which(V(g1_municipal)$level=="Statewide")]$shape<-"square"
+V(g1_municipal)[which(V(g1_municipal)$level=="Nationwide")]$shape<-"diamond"
+
+
+lnodes_muni <- 
+  data.frame(
+    label = c(
+      "Local",
+      "Regional",
+      "Statewide"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "triangle",
+      "square"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black"
+    )
+  )
+
+
+gvis_muni<-toVisNetworkData(g1_municipal)
+edges <- gvis_muni$edges
+edges <- edges %>% replace_na(list(color = "gray"))
+
+nodelist_muni<-gvis_muni$nodes
+viz_muni<-visNetwork(sort(gvis_muni$nodes),edges,main="Municipal Water",width = "100%",height = "850px") %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .5)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr", randomSeed = 27) %>%
+  visNodes(font=list(size = 16)) %>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("type"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left",addEdges = ledges_muni, addNodes = lnodes_muni, useGroups = FALSE, stepY=100) 
+
+viz_muni
+
+```
+
+
+**Rural Water in Texas**
+```{r echo=FALSE}
+
+#Define Attributes
+for (i in 1:vcount(g1_rural))
+{
+V(g1_rural)[i]$label<-input_attributes$label[which(input_attributes$name==V(g1_rural)[i]$name)]
+V(g1_rural)[i]$level<-input_attributes$level[which(input_attributes$name==V(g1_rural)[i]$name)]
+V(g1_rural)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1_rural)[i]$name)]
+V(g1_rural)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_rural)[i]$name)]
+}
+
+E(g1_rural)[E(g1_rural)$type=="Money"]$color <-"#7be141" #18% of all ties
+E(g1_rural)[E(g1_rural)$type=="Information"]$color <-"#f6eb14" #18% of all ties
+E(g1_rural)[E(g1_rural)$type=="Membership"]$color <-"#ad85e4" #%11% of all ties
+E(g1_rural)[E(g1_rural)$type=="Water"]$color <-"#97c2fc" #8% of all ties
+E(g1_rural)[E(g1_rural)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
+E(g1_rural)[E(g1_rural)$type=="Contract"]$color <-"#00b294" #13% of Rural ties
+
+ledges_rural <-
+  data.frame(
+    label = c(
+      "Money",
+      "Information",
+      "Membership",
+      "Regulation",
+      "Contract",
+      "Water",
+      "Other"
+    ),
+    arrows = c("to"),
+    color = c(
+      "#7be141",
+      "#f6eb14",
+      "#ad85e4",
+      "#ec008c",
+      "#00b294",
+      "#97c2fc",
+      "gray"
+    )
+  )
+
+
+V(g1_rural)[which(V(g1_rural)$type=="Government")]$color<-"#f8f8ff"
+V(g1_rural)[which(V(g1_rural)$type=="NGO")]$color<-"#f8f8ff"
+V(g1_rural)[which(V(g1_rural)$type=="Private")]$color<-"#f8f8ff"
+V(g1_rural)[which(V(g1_rural)$type=="Utilities")]$color<-"#f8f8ff"
+V(g1_rural)[which(V(g1_rural)$type=="Physical Feature")]$color<-"#f8f8ff"
+V(g1_rural)[which(V(g1_rural)$type=="Academic")]$color<-"#f8f8ff"
+V(g1_rural)[which(V(g1_rural)$type=="Public")]$color<- "#f8f8ff"
+
+
+V(g1_rural)[which(V(g1_rural)$level=="Local")]$shape<-"dot"
+V(g1_rural)[which(V(g1_rural)$level=="Regional")]$shape<-"triangle"
+V(g1_rural)[which(V(g1_rural)$level=="Statewide")]$shape<-"square"
+V(g1_rural)[which(V(g1_rural)$level=="Nationwide")]$shape<-"diamond"
+
+
+lnodes_rural <- 
+  data.frame(
+    label = c(
+      "Local",
+      "Statewide", 
+      "National"
+    ),
+    color.background = c(
+      "white",
+      "white",
+      "white"
+    ),
+    color.border = c(
+      "black",
+      "black",
+      "black"
+    ),
+    shape = c(
+      "dot",
+      "square",
+      "diamond"
+    ),
+    font.color =c(
+      "black",
+      "black",
+      "black"
+    )
+  )
+
+
+
+gvis_rural<-toVisNetworkData(g1_rural)
+edges <- gvis_rural$edges
+edges <- edges %>% replace_na(list(color = "gray"))
+
+nodelist_rural<-gvis_rural$nodes
+viz_rural <- visNetwork(sort(gvis_rural$nodes), edges, main="Rural",width = "100%",height = "850px") %>%
+  visEdges(smooth =T,
+           arrows =list(to = list(enabled = TRUE, scaleFactor = .4)),
+           color = list(color = "lightblue", highlight = "black"))  %>% #https://datastorm-open.github.io/visNetwork/edges.html
+  visPhysics(stabilization = FALSE)  %>%
+  visIgraphLayout(smooth=FALSE,physics=FALSE, layout="layout_with_fr", randomSeed = 27) %>%
+  visNodes(font=list(size = 16), label = V(g1_rural)$label) %>%
+  visInteraction(navigationButtons = TRUE)%>%
+  visOptions(selectedBy = list(variable = c("type"), multiple = TRUE),
+             highlightNearest = list(enabled = T, hover = T),
+             nodesIdSelection = TRUE)%>%
+  addFontAwesome() %>%
+  visLegend(position = "left", addNodes = lnodes_rural, addEdges = ledges_rural, useGroups = FALSE,stepY=100)
+
+
+viz_rural
+```
+
+
+
+

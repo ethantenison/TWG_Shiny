@@ -1,0 +1,101 @@
+name,formal name,label,level,type,size,x,y
+Academic Researchers,Academic Researchers,Uni,Statewide,Academic,1,-0.017037798,-0.377968416
+Advisory Groups,Advisory Groups,Advisory Grps,Local,Public,0.5,0.268430532,-0.624196294
+Agriculture,Agricultural Interests,Ag,Statewide,Private,0.5,0.682200922,0.425187094
+Aquifer,Aquifers,Aquifer,Local,Physical Feature,1.5,0.616386339,0.100628472
+Bay/Basin Area Stakeholder Committees,Basin and Bay Stakeholder committees,BBSC,Regional,Government,1,-0.038608953,-0.066622367
+Bond Rating Agency,Bond Rating Agency,Bond,Statewide,Private,1,0.006866001,-0.432882899
+Bureau Economic Geology,Bureau of Economic Geology,BEG,Statewide,Academic,1.5,0.224633193,0.019350623
+Bureau of Reclamation,U.S. Bureau of Reclamation,USBOR,Federal,Government,0.5,-0.351880614,0.328119559
+Carbon Offsetter,Carbon Offsetter,CO,Statewide,Private,0.5,0.750101649,-0.307607333
+Chamber Groups,Chamber of Commerce Groups,Chamber Groups,Local,NGO,7,0.410480686,-0.224631509
+Cities < 10K ,"Cities with Fewer than 10,000 People",Cities<10K,Local,Public,7,0.410480686,-0.224631509
+City or County with PACE Authority,Local Government with PACE Authority,PACE,Local,Government,1.5,0.07745603,0.562583311
+Communities Unlimited (National),Communities Unlimited,CU,Federal,NGO,0.5,0.871570669,-0.636911587
+Communities Unlimited (Texas),Communities Unlimited (Texas),TxCU,Statewide,NGO,3,0.587588727,-0.406479743
+Consultants,Consultant,Consultant,Statewide,Private,3,0.417371938,0.03719795
+Contractors,Contractors and Service Providers,Contractors,Local,Private,1.5,0.257846999,0.203526461
+Counties,Counties,Counties,Local,Government,0.5,0.813489924,0.19260336
+Courts,Texas Court System,Courts,Statewide,Government,4,-0.148064617,-0.16345547
+Created wetlands,Wetlands,Wetlands,Local,Physical Feature,1.5,-0.750650937,0.627233209
+Customers,Utility Customers,Utility Customers,Local,Public,1,0.298914963,0.271680431
+Disposal Injection Well,Injection Wells,Injection Well,Local,Physical Feature,0.5,-0.850116937,0.320518238
+"Disposal Site (stream, sea)",Produced Water Disposal Location,Surface Disposal,Local,Physical Feature,1,0.235118008,-0.727303593
+Dryland Farmers,Dryland Farmers,Dryland Farmers,Local,Private,3.5,-0.282211879,-0.245681939
+Edwards Aquifer Authority,Edwards Aquifer Authority,EAA,Local,Government,1,0.37911185,0.20992689
+Electric Generation,Electric Generation Facilities,ElecGen,Local,Utilities,0.5,0.551218285,0.548381436
+Environmental Groups,Environmental Advocacy Groups,Envtl Grps,Statewide,NGO,18,-0.0454396,0.113371859
+Flood Districts,Flood Districts,FDs,Local,Government,0.5,-0.406521348,0.198197111
+Flood Mapping Division (TWDB),Flood Mapping Division of TWDB,TWDB FMD,Statewide,Government,0.5,0.780138456,0.446673074
+GCDs,Groundwater Conservation Districts,GCDs,Local,Government,2,0.392001154,-0.060802546
+GLO,General Land Office,GLO,Statewide,Government,17,0.080526007,-0.16917498
+Groundwater Irrigators,Groundwater Irrigators,GWI,Local,Private,0.5,0.768335705,0.273659591
+Groundwater Mgmt Area,Goundwater Management Area,GMA,Regional,Government,3.5,-0.17395403,-0.217712191
+Hunting & Angling Groups,Hunting and Fishing Groups,Hunting/Fishing,Statewide,NGO,2,0.266826151,-0.057330063
+Investor Owned Utilities,Investor Owned Utilities,IOUs,Local,Utilities,1,-0.287138735,0.139104035
+Irrigation Districts,Irrigation Districts,IDs,Local,Government,0.5,0.644397158,0.556069984
+Landowner w/ GW (in GCD),Groundwater Owner (GCD),GWO in GCD,Local,Private,6,0.378044558,-0.317029947
+Landowner w/GW (no GCD),Groundwater Owner (no GCD),GWO no GCD,Local,Private,1.5,0.16507423,-0.421293052
+Landowners/Farmers/Rangers,Landowners,Landowner,Local,Public,4.5,0.235277779,0.313417014
+Lender,Lender,Lender,Statewide,Private,1,-0.06708612,-0.54467344
+Livestock Producers,Livestock Producers,Livestock,Statewide,Private,0.5,-0.139085322,-0.9678554
+Municipal Utilities,Municipal Utilities,Mun. Util,Local,Utilities,1,-0.267333567,0.208739283
+Municipalities,Municipalities,Cities,Local,Public,7.5,0.734499855,0.355904851
+National Rural Water Association,National Rural Water Association,NRWA,Federal,NGO,1,-0.02357335,0.863511489
+Net Zero Funds,Net Zero Funds,Net Zero Funds,Statewide,Private,3.5,-0.275547156,-0.286313212
+NRSC,Natural Resources Conservation Service,NRCS,Federal,Government,1,-0.538026006,-0.370726599
+OG E&P Operator,Oil and Gas Exploration and Production Operator,O/G E&P,Statewide,Private,1,0.174240622,0.550398172
+OG Refinery,Oil and Gas Refinery,O/G Refinery,Local,Private,2,0.219630712,-0.981634756
+Oil and Gas,Oil and Gas Operators,O/G,Statewide,Private,2,-0.327014064,-0.099678249
+Onsite Water Project Developers,On-site Water Project Developers,ProjDev,Local,Private,1.5,-0.020136064,0.677048228
+Orphaned Well Remediation,Well Remediation Company,Well Remediation,Statewide,Private,1.5,-0.49789053,0.443839685
+Permitted GW Users,Permitted Groundwater User,GW User,Local,Private,0.5,-1,0.802362733
+Political Subdivisions,Political Subdivisions,SubDivisions,Statewide,Government,1.5,-0.160537508,-0.302663531
+Private banks/CoBank,Private Banks,Private Banks,Statewide,Private,0.5,-0.131792118,-0.04985385
+Private Companies,Private Companies,Private,Statewide,Private,1,0.56211902,-0.559722972
+Public,Public,Public,Statewide,Public,1,-0.045883961,0.528432303
+Railroad Commission,Railroad Commission of Texas,RRC,Statewide,Government,2,0.067890103,0.410161066
+Rate Advisory Committee,Rate Advisory Committee,Rate Cmte,Local,Public,1,-0.530119274,0.239503315
+Rate Payers,Rate Payers,Rate Payers,Local,Public,1.5,0.636803506,-0.054402048
+Regional Flood Planning Groups,Regional Flood Planning Groups,RFPGs,Regional,Government,11,0.457215573,0.203529246
+Regional Water Planning Groups,Regional Water Planning Groups,RWPG,Regional,Government,3,0.12233611,0.000143211
+Reservoir,Reservoirs,Reservoir,Local,Physical Feature,1.5,0.321003908,0.66207241
+River Authorities,River Authority,River Authority,Regional,Government,4.5,0.154511047,-0.058639503
+Rivers,Rivers,River,Regional,Physical Feature,0.5,-1,0.802362733
+Small businesses,Small Businesses,Small Biz,Local,Private,0.5,0.821426166,0.372871851
+Social Media,Social Media,SocMed,Statewide,Private,1,-0.178067284,0.414032688
+Soil and Water Conservation Bd,Texas State Soil and Water Conservation Board,TSSWCB,Statewide,Government,0.5,0.613124996,0.481532891
+Springs,Spring Flows,Springs,Local,Physical Feature,0.5,0.991362586,0.125219971
+State Auditor,State Auditor,Auditor,Statewide,Public,1,-0.030110837,-0.261540121
+State Legislature,Texas Legislature,Leg,Statewide,Government,14,-0.010110837,-0.241540121
+Statewide Elected Officials,State Officials,Elected State Officials,Statewide,Government,2,0.010985834,0.043595468
+Surface Irrigators,Surface Irrigators,SIRGs,Local,Private,3.5,0.050209799,-0.266183731
+Surface Water Rights Holder,Surface Water Rights Holder,Water Rights Holder,Regional,Private,1.5,0.148949061,-0.71544018
+TAGD,Texas Association of Groundwater Districts,TAGD,Statewide,NGO,1,-0.162354048,-0.375449049
+TCEQ,Texas Commission on Environmental Quality,TCEQ,Statewide,Government,12.5,0.189617307,-0.262176831
+TDEM,Texas Department of Emergency Management,TDEM,Statewide,Government,0.5,0.719382963,0.506455009
+Texas Attorney General,Texas Attorney General,TxAttyGen,Statewide,Government,2.5,0.525101245,-0.358769132
+Texas Dept Agriculture,Texas Department of Agriculture,TDA,Statewide,Government,0.5,0.846226709,0.285630478
+Texas Parks and Wildlife,Texas Parks and Wildlife Department,TPWD,Statewide,Government,3,0.140864539,0.364618876
+Texas PUC,Public Utility Commission of Texas,PUCT,Statewide,Government,3.5,0.314173806,-0.354420637
+Texas Rural Water Association,Texas Rural Water Association,TRWA,Statewide,NGO,4,0.352083091,-0.417709138
+Texas Water Trade,Texas Water Trade,Tx Water Trade,Statewide,NGO,5.5,0.065743966,0.292033656
+Third-Party Recycler,Third-party Recycler,Recycler,Statewide,Private,0.5,-0.044641065,-1
+"Trade Associations (Ag, O/G, others)",Trade Associations,Trade,Statewide,NGO,5.5,-0.100208902,-0.281024473
+Traditional Media,Traditional Media,Media,Statewide,Private,1.5,-0.111183237,0.318197269
+TWCA,Texas Water Conservation Association,TWCA,Statewide,NGO,4.5,-0.037423156,-0.16299972
+TWDB,Texas Water Development Board,TWDB,Statewide,Government,22.5,0.192208582,-0.148133561
+TWICC,Texas Water Infrastructure Coordination Committee,TWICC,Statewide,Public,2.5,0.548728442,-0.312581027
+TWUA,Texas Water Utilities Association,TWUA,Statewide,NGO,0.5,-0.328013985,-0.482954373
+TX AWWA,American Water Works Association (Texas chapter),TxAWWA,Statewide,NGO,0.5,-0.252613983,-0.555406995
+US Army Corps of Engineers,U.S Army Corp of Engineers,USACE,Federal,Government,1,-0.121497068,0.436160927
+US EPA,U.S. Environmental Protection Agency,EPA,Federal,Government,1,0.472475979,-0.278911018
+US FWS,U.S. Fish & Wildlife Service,USFWS,Federal,Government,0.5,0.139741112,0.739095835
+USDA - RD,U.S. Department of Agriculture - Rural Development,USDA-RD,Federal,Government,2,0.507511098,-0.494859962
+Water Districts,Water Districts,WDs,Local,Government,6.5,0.388921329,-0.243199642
+Water groups,Non-governmental Organizations,H2ONGO,Statewide,NGO,1.5,0.137435125,-0.34757005
+Water Marketers,Water Marketers,Water Marketers,Statewide,Private,1.5,-0.452845923,-0.312311286
+Water Researchers/Scientists,Water Researchers,Water Research,Statewide,Academic,1,-0.224815856,0.263831631
+Water Supply Corporations,Water Supply Corportations,WSCs,Local,Utilities,6.5,0.385627215,-0.348852477
+Water Utilities,Water Utilities,WUtil,Local,Utilities,14,0.214689289,0.078016266
+Wholesale Water Providers,Wholesale Water Providers,Wholesale H2O,Statewide,Private,2.5,0.480469062,-0.395737486
