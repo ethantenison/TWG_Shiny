@@ -96,7 +96,12 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-            visNetworkOutput("twg_network",height = "800px")
+            
+        tabsetPanel(type = "tabs",
+                    tabPanel("Plot", visNetworkOutput("twg_network",height = "800px")),
+                    tabPanel("Table", tableOutput("table"))
+            
+        )
         )
     )
 )
@@ -144,9 +149,9 @@ server <- function(input, output) {
                             randomSeed = 27) %>%
             visInteraction(navigationButtons = TRUE) %>%
             visOptions(
-                selectedBy = list(variable = c("type"), multiple = TRUE),
+                #selectedBy = list(variable = c("type"), multiple = TRUE),
                 highlightNearest = list(enabled = T, hover = T),
-                nodesIdSelection = TRUE
+                #nodesIdSelection = TRUE
             ) %>%
              addFontAwesome()# %>%
             # visLegend(
@@ -156,6 +161,14 @@ server <- function(input, output) {
             #     useGroups = FALSE,
             #     stepY = 100
              #) 
+    })
+    
+    output$table <- renderTable({
+        #as.data.frame(get.edgelist(combined_data[[input$focus]][[input$sectors]]))
+        
+        gvis <- toVisNetworkData(combined_data[[input$focus]][[input$sectors]])
+        nodelist <- gvis$nodes
+        nodelist
     })
 }
 
