@@ -168,6 +168,10 @@ server <- function(input, output) {
         
         gvis <- toVisNetworkData(combined_data[[input$focus]][[input$sectors]])
         nodelist <- gvis$nodes
+        nodelist$size <- as.integer(nodelist$size)
+        nodelist <- nodelist %>% select('id', 'level', 'type', 'size') %>% rename("Node" = "id", "Juristication" = "level",
+                                                                                  "Oragnizatino Type" = "type", "Number of Connections" = "size")
+        
         nodelist
     })
 }
