@@ -1,0 +1,101 @@
+"","name","inDegree","outDegree","TotalDegree","betweenness","inCloseness","outCloseness","formal.name","label","level","type","size","x","y"
+"1","Academic Researchers",1,2,3,0,0.0394108280254777,0.0237068965517241,"Academic Researchers","Uni","Statewide","Academic",1,-0.017037798,-0.377968416
+"2","Advisory Groups",0,1,1,0,0.01,0.0242290748898678,"Advisory Groups","Advisory Grps","Local","Public",0.5,0.268430532,-0.624196294
+"3","Agriculture",0,1,1,0,0.01,0.0236107798712139,"Agricultural Interests","Ag","Statewide","Private",0.5,0.682200922,0.425187094
+"4","Aquifer",0,3,3,0,0.01,0.0246575342465753,"Aquifers","Aquifer","Local","Physical Feature",1.5,0.616386339,0.100628472
+"5","Bay/Basin Area Stakeholder Committees",1,1,2,0,0.0394108280254777,0.0236728837876614,"Basin and Bay Stakeholder committees","BBSC","Regional","Government",1,-0.038608953,-0.066622367
+"6","Bond Rating Agency",0,1,1,0,0.01,0.024,"Bond Rating Agency","Bond","Statewide","Private",1,0.006866001,-0.432882899
+"7","Bureau Economic Geology",0,2,2,0,0.01,0.0242647058823529,"Bureau of Economic Geology","BEG","Statewide","Academic",1.5,0.224633193,0.019350623
+"8","Bureau of Reclamation",0,3,3,0,0.01,0.024955886059995,"U.S. Bureau of Reclamation","USBOR","Federal","Government",0.5,-0.351880614,0.328119559
+"9","Carbon Offsetter",0,1,1,0,0.01,0.024300441826215,"Carbon Offsetter","CO","Statewide","Private",0.5,0.750101649,-0.307607333
+"10","Chamber Groups",0,1,1,0,0.01,0.024,"Chamber of Commerce Groups","Chamber Groups","Local","NGO",7,0.410480686,-0.224631509
+"11","Cities < 10K ",12,2,14,0.0106248409350819,0.0412844036697248,0.0237068965517241,"Cities with Fewer than 10,000 People","Cities<10K","Local","Public",7,0.410480686,-0.224631509
+"12","City or County with PACE Authority",2,1,3,0.0157699443413729,0.0459610027855153,0.0102030299907245,"Local Government with PACE Authority","PACE","Local","Government",1.5,0.07745603,0.562583311
+"13","Communities Unlimited (National)",0,1,1,0,0.01,0.0242766061794998,"Communities Unlimited","CU","Federal","NGO",0.5,0.871570669,-0.636911587
+"14","Communities Unlimited (Texas)",1,5,6,0.00618429189857761,0.0101010101010101,0.0240466358999271,"Communities Unlimited (Texas)","TxCU","Statewide","NGO",3,0.587588727,-0.406479743
+"15","Consultants",2,4,6,0.0716393103220561,0.0408584399504746,0.0237125748502994,"Consultant","Consultant","Statewide","Private",3,0.417371938,0.03719795
+"16","Contractors",1,2,3,0,0.0404246631278073,0.0235154394299287,"Contractors and Service Providers","Contractors","Local","Private",1.5,0.257846999,0.203526461
+"17","Counties",0,1,1,0,0.01,0.0236107798712139,"Counties","Counties","Local","Government",0.5,0.813489924,0.19260336
+"18","Courts",6,2,8,0.00248853237005436,0.0407239819004525,0.0237580993520518,"Texas Court System","Courts","Statewide","Government",4,-0.148064617,-0.16345547
+"19","Created wetlands",2,1,3,0.000700357843214986,0.0413361169102296,0.0101010101010101,"Wetlands","Wetlands","Local","Physical Feature",1.5,-0.750650937,0.627233209
+"20","Customers",1,1,2,0,0.0404246631278073,0.0235154394299287,"Utility Customers","Utility Customers","Local","Public",1,0.298914963,0.271680431
+"21","Disposal Injection Well",2,0,2,0,0.0418427726120034,0.01,"Injection Wells","Injection Well","Local","Physical Feature",0.5,-0.850116937,0.320518238
+"22","Disposal Site (stream, sea)",2,0,2,0,0.045601105481345,0.01,"Produced Water Disposal Location","Surface Disposal","Local","Physical Feature",1,0.235118008,-0.727303593
+"23","Dryland Farmers",1,6,7,0.00525322848158681,0.04,0.023735315272117,"Dryland Farmers","Dryland Farmers","Local","Private",3.5,-0.282211879,-0.245681939
+"24","Edwards Aquifer Authority",1,1,2,0,0.0404246631278073,0.0235154394299287,"Edwards Aquifer Authority","EAA","Local","Government",1,0.37911185,0.20992689
+"25","Electric Generation",0,1,1,0,0.01,0.0236107798712139,"Electric Generation Facilities","ElecGen","Local","Utilities",0.5,0.551218285,0.548381436
+"26","Environmental Groups",12,23,35,0.131252653877637,0.0406070549630845,0.0240641711229947,"Environmental Advocacy Groups","Envtl Grps","Statewide","NGO",18,-0.0454396,0.113371859
+"27","Flood Districts",0,1,1,0,0.01,0.0236107798712139,"Flood Districts","FDs","Local","Government",0.5,-0.406521348,0.198197111
+"28","Flood Mapping Division (TWDB)",2,2,4,0.000655261978212211,0.0409260024803638,0.0237012209719895,"Flood Mapping Division of TWDB","TWDB FMD","Statewide","Government",0.5,0.780138456,0.446673074
+"29","GCDs",14,25,39,0.153847581851047,0.04125,0.024081731938701,"Groundwater Conservation Districts","GCDs","Local","Government",2,0.392001154,-0.060802546
+"30","GLO",0,1,1,0,0.01,0.0236107798712139,"General Land Office","GLO","Statewide","Government",17,0.080526007,-0.16917498
+"31","Groundwater Irrigators",2,5,7,0.0143429702683103,0.0408753096614368,0.0237182558696694,"Groundwater Irrigators","GWI","Local","Private",0.5,0.768335705,0.273659591
+"32","Groundwater Mgmt Area",3,0,3,0,0.0428200692041522,0.01,"Goundwater Management Area","GMA","Regional","Government",3.5,-0.17395403,-0.217712191
+"33","Hunting & Angling Groups",1,1,2,0,0.0393794749403341,0.0237296260786194,"Hunting and Fishing Groups","Hunting/Fishing","Statewide","NGO",2,0.266826151,-0.057330063
+"34","Investor Owned Utilities",10,2,12,0.00698718984845124,0.0412328196584756,0.0237068965517241,"Investor Owned Utilities","IOUs","Local","Utilities",1,-0.287138735,0.139104035
+"35","Irrigation Districts",2,1,3,0,0.0408753096614368,0.0234264079507809,"Irrigation Districts","IDs","Local","Government",0.5,0.644397158,0.556069984
+"36","Landowner w/ GW (in GCD)",1,1,2,0,0.0416316232127839,0.0102030299907245,"Groundwater Owner (GCD)","GWO in GCD","Local","Private",6,0.378044558,-0.317029947
+"37","Landowner w/GW (no GCD)",0,1,1,0,0.01,0.0102030299907245,"Groundwater Owner (no GCD)","GWO no GCD","Local","Private",1.5,0.16507423,-0.421293052
+"38","Landowners/Farmers/Rangers",1,1,2,0,0.0393794749403341,0.0237296260786194,"Landowners","Landowner","Local","Public",4.5,0.235277779,0.313417014
+"39","Lender",1,1,2,0.00773036487322202,0.0443548387096774,0.0102030299907245,"Lender","Lender","Statewide","Private",1,-0.06708612,-0.54467344
+"40","Livestock Producers",1,6,7,0.00525322848158681,0.04,0.023735315272117,"Livestock Producers","Livestock","Statewide","Private",0.5,-0.139085322,-0.9678554
+"41","Municipal Utilities",2,0,2,0,0.0404081632653061,0.01,"Municipal Utilities","Mun. Util","Local","Utilities",1,-0.267333567,0.208739283
+"42","Municipalities",14,4,18,0.0296951473367443,0.0415268456375839,0.0237695078031212,"Municipalities","Cities","Local","Public",7.5,0.734499855,0.355904851
+"43","National Rural Water Association",1,1,2,0.000162535876821591,0.0101010101010101,0.0244143033292232,"National Rural Water Association","NRWA","Federal","NGO",1,-0.02357335,0.863511489
+"44","Net Zero Funds",2,0,2,0,0.0421815083084789,0.01,"Net Zero Funds","Net Zero Funds","Statewide","Private",3.5,-0.275547156,-0.286313212
+"45","NRSC",0,2,2,0,0.01,0.0248369292523833,"Natural Resources Conservation Service","NRCS","Federal","Government",1,-0.538026006,-0.370726599
+"46","OG E&P Operator",5,1,6,0.00834879406307978,0.0476419634263715,0.0101010101010101,"Oil and Gas Exploration and Production Operator","O/G E&P","Statewide","Private",1,0.174240622,0.550398172
+"47","OG Refinery",1,1,2,0.00010307153164296,0.0421815083084789,0.0101010101010101,"Oil and Gas Refinery","O/G Refinery","Local","Private",2,0.219630712,-0.981634756
+"48","Oil and Gas",3,1,4,0.00456152793815131,0.0397590361445783,0.0237410071942446,"Oil and Gas Operators","O/G","Statewide","Private",2,-0.327014064,-0.099678249
+"49","Onsite Water Project Developers",2,1,3,0.000463821892393321,0.0430809399477807,0.0102030299907245,"On-site Water Project Developers","ProjDev","Local","Private",1.5,-0.020136064,0.677048228
+"50","Orphaned Well Remediation",1,2,3,0.00863686577972292,0.040976821192053,0.0102030299907245,"Well Remediation Company","Well Remediation","Statewide","Private",1.5,-0.49789053,0.443839685
+"51","Permitted GW Users",1,2,3,0.00140794783651926,0.04,0.0236051502145923,"Permitted Groundwater User","GW User","Local","Private",0.5,-1,0.802362733
+"52","Political Subdivisions",1,0,1,0,0.0423982869379015,0.01,"Political Subdivisions","SubDivisions","Statewide","Government",1.5,-0.160537508,-0.302663531
+"53","Private banks/CoBank",0,3,3,0,0.01,0.0240232953166707,"Private Banks","Private Banks","Statewide","Private",0.5,-0.131792118,-0.04985385
+"54","Private Companies",0,3,3,0,0.01,0.0248244734202608,"Private Companies","Private","Statewide","Private",1,0.56211902,-0.559722972
+"55","Public",2,2,4,0.00613275613275613,0.0384018619084562,0.02312543798178,"Public","Public","Statewide","Public",1,-0.045883961,0.528432303
+"56","Railroad Commission",0,3,3,0,0.01,0.0243482538121003,"Railroad Commission of Texas","RRC","Statewide","Government",2,0.067890103,0.410161066
+"57","Rate Advisory Committee",1,2,3,0.00022332165189308,0.0101010101010101,0.0241051862673484,"Rate Advisory Committee","Rate Cmte","Local","Public",1,-0.530119274,0.239503315
+"58","Rate Payers",0,2,2,0,0.01,0.0246821241585639,"Rate Payers","Rate Payers","Local","Public",1.5,0.636803506,-0.054402048
+"59","Regional Flood Planning Groups",21,1,22,0.0726503714387385,0.0421455938697318,0.0233876683203402,"Regional Flood Planning Groups","RFPGs","Regional","Government",11,0.457215573,0.203529246
+"60","Regional Water Planning Groups",4,2,6,0,0.0411300373909431,0.0236898779612347,"Regional Water Planning Groups","RWPG","Regional","Government",3,0.12233611,0.000143211
+"61","Reservoir",1,2,3,0.00733922162493591,0.0401134521880065,0.0234264079507809,"Reservoirs","Reservoir","Local","Physical Feature",1.5,0.321003908,0.66207241
+"62","River Authorities",2,7,9,0.000431064517721908,0.0404081632653061,0.0238381892607753,"River Authority","River Authority","Regional","Government",4.5,0.154511047,-0.058639503
+"63","Rivers",2,0,2,0,0.0440195642507781,0.01,"Rivers","River","Regional","Physical Feature",0.5,-1,0.802362733
+"64","Small businesses",0,1,1,0,0.01,0.0236107798712139,"Small Businesses","Small Biz","Local","Private",0.5,0.821426166,0.372871851
+"65","Social Media",1,1,2,0.00386518243661101,0.0394579513750498,0.0228426395939086,"Social Media","SocMed","Statewide","Private",1,-0.178067284,0.414032688
+"66","Soil and Water Conservation Bd",0,1,1,0,0.01,0.0236107798712139,"Texas State Soil and Water Conservation Board","TSSWCB","Statewide","Government",0.5,0.613124996,0.481532891
+"67","Springs",1,0,1,0,0.0101010101010101,0.01,"Spring Flows","Springs","Local","Physical Feature",0.5,0.991362586,0.125219971
+"68","State Auditor",0,1,1,0,0.01,0.0242290748898678,"State Auditor","Auditor","Statewide","Public",1,-0.030110837,-0.261540121
+"69","State Legislature",26,7,33,0.0544114406919201,0.0416666666666667,0.0238669238187078,"Texas Legislature","Leg","Statewide","Government",14,-0.010110837,-0.241540121
+"70","Statewide Elected Officials",4,0,4,0,0.0423982869379015,0.01,"State Officials","Elected State Officials","Statewide","Government",2,0.010985834,0.043595468
+"71","Surface Irrigators",11,5,16,0.039800811852935,0.0413879598662207,0.0237410071942446,"Surface Irrigators","SIRGs","Local","Private",3.5,0.050209799,-0.266183731
+"72","Surface Water Rights Holder",1,2,3,0.00861227967094237,0.0418074324324324,0.0104144750683779,"Surface Water Rights Holder","Water Rights Holder","Regional","Private",1.5,0.148949061,-0.71544018
+"73","TAGD",1,1,2,0.00140794783651926,0.040016168148747,0.0234430499644802,"Texas Association of Groundwater Districts","TAGD","Statewide","NGO",1,-0.162354048,-0.375449049
+"74","TCEQ",11,16,27,0.0764003915722959,0.0414225941422594,0.0239941832283083,"Texas Commission on Environmental Quality","TCEQ","Statewide","Government",12.5,0.189617307,-0.262176831
+"75","TDEM",0,1,1,0,0.01,0.0236107798712139,"Texas Department of Emergency Management","TDEM","Statewide","Government",0.5,0.719382963,0.506455009
+"76","Texas Attorney General",0,5,5,0,0.01,0.0240466358999271,"Texas Attorney General","TxAttyGen","Statewide","Government",2.5,0.525101245,-0.358769132
+"77","Texas Dept Agriculture",0,1,1,0,0.01,0.0236107798712139,"Texas Department of Agriculture","TDA","Statewide","Government",0.5,0.846226709,0.285630478
+"78","Texas Parks and Wildlife",3,3,6,0.0122467631011719,0.0403258655804481,0.0237638022083533,"Texas Parks and Wildlife Department","TPWD","Statewide","Government",3,0.140864539,0.364618876
+"79","Texas PUC",1,6,7,0,0.0401459854014599,0.0237125748502994,"Public Utility Commission of Texas","PUCT","Statewide","Government",3.5,0.314173806,-0.354420637
+"80","Texas Rural Water Association",2,6,8,0.0065615601329887,0.0103082049146189,0.0241817293600391,"Texas Rural Water Association","TRWA","Statewide","NGO",4,0.352083091,-0.417709138
+"81","Texas Water Trade",4,7,11,0.0125064398255493,0.0103092783505155,0.0245535714285714,"Texas Water Trade","Tx Water Trade","Statewide","NGO",5.5,0.065743966,0.292033656
+"82","Third-Party Recycler",1,0,1,0,0.0480582524271845,0.01,"Third-party Recycler","Recycler","Statewide","Private",0.5,-0.044641065,-1
+"83","Trade Associations (Ag, O/G, others)",11,6,17,0.0226911720920688,0.0410107705053852,0.0238726790450928,"Trade Associations","Trade","Statewide","NGO",5.5,-0.100208902,-0.281024473
+"84","Traditional Media",1,2,3,0.00386518243661101,0.0393794749403341,0.0237410071942446,"Traditional Media","Media","Statewide","Private",1.5,-0.111183237,0.318197269
+"85","TWCA",3,7,10,0.00727005163461564,0.0395209580838323,0.0237580993520518,"Texas Water Conservation Association","TWCA","Statewide","NGO",4.5,-0.037423156,-0.16299972
+"86","TWDB",24,22,46,0.211403669060862,0.0420025456088248,0.0240232953166707,"Texas Water Development Board","TWDB","Statewide","Government",22.5,0.192208582,-0.148133561
+"87","TWICC",0,5,5,0,0.01,0.0240466358999271,"Texas Water Infrastructure Coordination Committee","TWICC","Statewide","Public",2.5,0.548728442,-0.312581027
+"88","TWUA",0,1,1,0,0.01,0.0240993184031159,"Texas Water Utilities Association","TWUA","Statewide","NGO",0.5,-0.328013985,-0.482954373
+"89","TX AWWA",0,1,1,0,0.01,0.0240993184031159,"American Water Works Association (Texas chapter)","TxAWWA","Statewide","NGO",0.5,-0.252613983,-0.555406995
+"90","US Army Corps of Engineers",2,0,2,0,0.0411471321695761,0.01,"U.S Army Corp of Engineers","USACE","Federal","Government",1,-0.121497068,0.436160927
+"91","US EPA",0,2,2,0,0.01,0.0248618784530387,"U.S. Environmental Protection Agency","EPA","Federal","Government",1,0.472475979,-0.278911018
+"92","US FWS",0,1,1,0,0.01,0.0239941832283083,"U.S. Fish & Wildlife Service","USFWS","Federal","Government",0.5,0.139741112,0.739095835
+"93","USDA - RD",0,4,4,0,0.01,0.0251716247139588,"U.S. Department of Agriculture - Rural Development","USDA-RD","Federal","Government",2,0.507511098,-0.494859962
+"94","Water Districts",10,3,13,0.00837222837545181,0.0412328196584756,0.0237182558696694,"Water Districts","WDs","Local","Government",6.5,0.388921329,-0.243199642
+"95","Water groups",0,3,3,0,0.01,0.0244323790720632,"Non-governmental Organizations","H2ONGO","Statewide","NGO",1.5,0.137435125,-0.34757005
+"96","Water Marketers",3,0,3,0,0.0413533834586466,0.01,"Water Marketers","Water Marketers","Statewide","Private",1.5,-0.452845923,-0.312311286
+"97","Water Researchers/Scientists",0,1,1,0,0.01,0.024300441826215,"Water Researchers","Water Research","Statewide","Academic",1,-0.224815856,0.263831631
+"98","Water Supply Corporations",11,2,13,0.00885701314684596,0.0412671946644435,0.0237068965517241,"Water Supply Corportations","WSCs","Local","Utilities",6.5,0.385627215,-0.348852477
+"99","Water Utilities",16,13,29,0.0890189441755044,0.0417193426042984,0.0238439306358381,"Water Utilities","WUtil","Local","Utilities",14,0.214689289,0.078016266
+"100","Wholesale Water Providers",0,5,5,0,0.01,0.0240466358999271,"Wholesale Water Providers","Wholesale H2O","Statewide","Private",2.5,0.480469062,-0.395737486

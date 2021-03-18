@@ -1377,5 +1377,17 @@ viz_rural
 ```
 
 
+```{r save}
 
+saveRDS(g1, file="Texas_Water_Governance/data/g12.rds")
+saveRDS(g1_agriculture, file="Texas_Water_Governance/data/g1_agriculture2.rds")
+saveRDS(g1_environment, file="Texas_Water_Governance/data/g1_environment2.rds")
+saveRDS(g1_flooding, file="Texas_Water_Governance/data/g1_flooding2.rds")
+saveRDS(g1_groundwater, file="Texas_Water_Governance/data/g1_groundwater2.rds")
+saveRDS(g1_innovation, file="Texas_Water_Governance/data/g1_innovation2.rds")
+saveRDS(g1_municipal, file="Texas_Water_Governance/data/g1_municipal2.rds")
+saveRDS(g1_oilandgas, file="Texas_Water_Governance/data/g1_oilandgas2.rds")
+saveRDS(g1_rural, file="Texas_Water_Governance/data/g1_rural2.rds")
+
+```
 

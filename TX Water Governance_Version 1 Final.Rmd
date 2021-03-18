@@ -297,9 +297,11 @@ viz_all <-
   ) 
   
   
-viz_all$x$nodes <- viz_all$x$nodes %>% left_join(nodes, by = 'id') %>% select(-c('x.x', 'y.x')) %>% rename(x = x.y, y=y.y)
+#viz_all$x$nodes <- viz_all$x$nodes %>% left_join(nodes, by = 'id') %>% select(-c('x.x', 'y.x')) %>% rename(x = x.y, y=y.y)
 
 viz_all
+
+
 ```
 
 ```{r all_network, message=FALSE, warning=FALSE, include=FALSE}
@@ -325,7 +327,7 @@ viz <- visNetwork(allnodes, alledges, main = "Policy and Governance Across Texas
   ) %>% 
   visLegend(useGroups = TRUE)
 
-#visSave(viz, "media/simplied_all_network.html", selfcontained = TRUE, background = "white")
+#vissaveRDS(viz, "media/simplied_all_network.html", selfcontained = TRUE, background = "white")
 
 ```
 
@@ -1170,5 +1172,17 @@ viz_rural
 ```
 
 
+```{r savin}
 
+
+saveRDS(g1, file="Texas_Water_Governance/data/g1.rds")
+saveRDS(g1_agriculture, file="Texas_Water_Governance/data/g1_agriculture.rds")
+saveRDS(g1_environment, file="Texas_Water_Governance/data/g1_environment.rds")
+saveRDS(g1_flooding, file="Texas_Water_Governance/data/g1_flooding.rds")
+saveRDS(g1_groundwater, file="Texas_Water_Governance/data/g1_groundwater.rds")
+saveRDS(g1_innovation, file="Texas_Water_Governance/data/g1_innovation.rds")
+saveRDS(g1_municipal, file="Texas_Water_Governance/data/g1_municipal.rds")
+saveRDS(g1_oilandgas, file="Texas_Water_Governance/data/g1_oilandgas.rds")
+saveRDS(g1_rural, file="Texas_Water_Governance/data/g1_rural.rds")
+```
 
