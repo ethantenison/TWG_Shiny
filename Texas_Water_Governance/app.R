@@ -8,6 +8,7 @@ library(shiny)
 library(visNetwork)
 library(shinyWidgets)
 library(readr)
+library(DT)
 
 # ------------------------------- #
 # ------------------------------- #
@@ -99,7 +100,7 @@ ui <- fluidPage(
             
         tabsetPanel(type = "tabs",
                     tabPanel("Plot", visNetworkOutput("twg_network",height = "800px")),
-                    tabPanel("Table", tableOutput("table"))
+                    tabPanel("Table", DT::dataTableOutput("table"))
             
         )
         )
@@ -163,16 +164,16 @@ server <- function(input, output) {
              #) 
     })
     
-    output$table <- renderTable({
-        #as.data.frame(get.edgelist(combined_data[[input$focus]][[input$sectors]]))
+    output$table <- renderDataTable({
         
         gvis <- toVisNetworkData(combined_data[[input$focus]][[input$sectors]])
         nodelist <- gvis$nodes
         nodelist$size <- as.integer(nodelist$size)
+        rownames(nodelist)<-NULL
         nodelist <- nodelist %>% select('id', 'level', 'type', 'size') %>% rename("Node" = "id", "Juristication" = "level",
                                                                                   "Oragnizatino Type" = "type", "Number of Connections" = "size")
         
-        nodelist
+        datatable(nodelist, options = list(pageLength = 20))
     })
 }
 
