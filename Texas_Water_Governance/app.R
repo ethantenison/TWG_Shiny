@@ -9,6 +9,34 @@ library(visNetwork)
 library(shinyWidgets)
 library(readr)
 library(DT)
+library(dplyr)
+library(rmarkdown)
+library(igraph)
+library(sna)
+library(qgraph)
+library(ggplot2)
+library(xtable)
+library(stats)
+library(htmlwidgets)
+library(htmltools)
+library(rpivotTable)
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(mice)
+library(VIM)
+library(psych)
+library(semPlot)
+library(lavaan)
+library(kableExtra)
+library(tidyverse)
+library(htmlTable)
+library(htmlwidgets)
+library(ggmap)
+library(DiagrammeR)
+library(DiagrammeRsvg)
+library(motifr)
+
 
 # ------------------------------- #
 # ------------------------------- #
@@ -92,6 +120,15 @@ ui <- fluidPage(
                           "Flooding" = "g1_flooding",
                           "Innovation" = "g1_innovation")),
             
+            sliderInput("edge_width", "Edge Width",
+                        min = 0, max = 10,
+                        value = 2),
+            
+            sliderInput("node_size", "Node Size",
+                        min = 0, max = 10,
+                        value = 2)
+            
+            
             
         ),
 
@@ -120,8 +157,90 @@ server <- function(input, output) {
 
     output$twg_network <- renderVisNetwork({
         
+        
+        ledges <-
+            data.frame(
+                label = c(
+                    "Agriculture",
+                    "Environment",
+                    "Flooding",
+                    "Groundwater",
+                    "Oil and Gas",
+                    "Rural Utilities",
+                    "Innovation",
+                    "Municipal"
+                ),
+                arrows = c("to"),
+                color = c(
+                    "#7be141",
+                    "#00b294",
+                    "#97c2fc",
+                    "#ad85e4",
+                    "#fb7e81",
+                    "#ffa807",
+                    "#ec008c",
+                    "#eb7df4"
+                )
+            )
+        
+        lnodes <-
+            data.frame(
+                label = c(
+                    "Government",
+                    "NGO",
+                    "Private",
+                    "Public",
+                    "Utilities",
+                    "Physical Feature",
+                    "Academic",
+                    "Local",
+                    "Regional",
+                    "Statewide"
+                ),
+                color.background = c(
+                    "#fb7e81",
+                    "#ad85e4",
+                    "#7be141",
+                    "#eb7df4",
+                    "#ffa807",
+                    "#f6eb14",
+                    "#97c2fc",
+                    "white",
+                    "white",
+                    "white"
+                ),
+                color.border = c(
+                    "black",
+                    "black",
+                    "black",
+                    "black",
+                    "black",
+                    "black",
+                    "black",
+                    "black",
+                    "black",
+                    "black"
+                ),
+                shape = c(
+                    "box",
+                    "box",
+                    "box",
+                    "box",
+                    "box",
+                    "box",
+                    "box",
+                    "dot",
+                    "triangle",
+                    "square"
+                )
+            )
+        
+        
+        
+        
         gvis <- toVisNetworkData(combined_data[[input$focus]][[input$sectors]])
-        nodelist <- gvis$nodes
+        gvis$nodes$size = gvis$nodes$size + input$node_size * 2
+
         
         visNetwork(
             sort(gvis$nodes),
@@ -135,7 +254,8 @@ server <- function(input, output) {
                 arrows = list(to = list(
                     enabled = TRUE, scaleFactor = .5
                 )),
-                color = list(highlight = "black")
+                color = list(highlight = "black"),
+                width = input$edge_width
             ) %>% #https://datastorm-open.github.io/visNetwork/edges.html
             visNodes(color = list(
                 background = "white",
@@ -150,18 +270,19 @@ server <- function(input, output) {
                             randomSeed = 27) %>%
             visInteraction(navigationButtons = TRUE) %>%
             visOptions(
-                #selectedBy = list(variable = c("type"), multiple = TRUE),
+                selectedBy = list(variable = c("type"), multiple = TRUE),
                 highlightNearest = list(enabled = T, hover = T),
-                #nodesIdSelection = TRUE
+                nodesIdSelection = TRUE
             ) %>%
-             addFontAwesome()# %>%
-            # visLegend(
-            #     position = "left",
-            #     addNodes = lnodes,
-            #     addEdges = ledges,
-            #     useGroups = FALSE,
-            #     stepY = 100
-             #) 
+            visLegend(
+                position = "left",
+                addNodes = lnodes,
+                addEdges = ledges,
+                useGroups = FALSE,
+                ncol = 1,
+                width = 0.2,
+                zoom = FALSE
+            ) %>% addFontAwesome()
     })
     
     output$table <- renderDataTable({
