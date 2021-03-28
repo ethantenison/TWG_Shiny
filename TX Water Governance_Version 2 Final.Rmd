@@ -324,8 +324,11 @@ viz_all <-
     addNodes = lnodes,
     addEdges = ledges,
     useGroups = FALSE,
-    stepY = 100
+    ncol = 1,
+    width = 0.2,
+    zoom = FALSE
   ) 
+
   
   
 viz_all$x$nodes <- viz_all$x$nodes %>% left_join(nodes, by = 'id') %>% select(-c('x.x', 'y.x')) %>% rename(x = x.y, y=y.y)
@@ -413,8 +416,8 @@ V(g1_agriculture)[which(V(g1_agriculture)$type=="Government")]$color<-"#fb7e81"
 V(g1_agriculture)[which(V(g1_agriculture)$type=="NGO")]$color<-"#ad85e4"
 V(g1_agriculture)[which(V(g1_agriculture)$type=="Private")]$color<-"#7be141"
 V(g1_agriculture)[which(V(g1_agriculture)$type=="Utilities")]$color<-"#ffa807"
-V(g1_agriculture)[which(V(g1_agriculture)$type=="Academic")]$color<-"gray"
-V(g1_agriculture)[which(V(g1_agriculture)$type=="Public")]$color<-"Yellow"
+V(g1_agriculture)[which(V(g1_agriculture)$type=="Academic")]$color<-"#97c2fc"
+V(g1_agriculture)[which(V(g1_agriculture)$type=="Public")]$color<-"#eb7df4"
 
  V(g1_agriculture)[which(V(g1_agriculture)$level=="Local")]$shape<-"dot"
  V(g1_agriculture)[which(V(g1_agriculture)$level=="Regional")]$shape<-"triangle"
@@ -456,7 +459,7 @@ lnodes_ag <-
 
 gvis_agriculture<-toVisNetworkData(g1_agriculture)
 edges <- gvis_agriculture$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 
 viz_ag<-visNetwork(sort(gvis_agriculture$nodes),edges, main="Agriculture",width = "100%",height = "850px") %>%
@@ -493,7 +496,7 @@ V(g1_environment)[i]$size<-input_attributes$TotalDegree[which(input_attributes$n
 E(g1_environment)[E(g1_environment)$type=="Information"]$color <-"#f6eb14" #18% of all ties
 E(g1_environment)[E(g1_environment)$type=="Lobbying"]$color <-"#ad85e4" #10% of all ties
 E(g1_environment)[E(g1_environment)$type=="Cooperation/coordination"]$color <-"#ec008c" #40% of ENV ties
-E(g1_environment)[E(g1_environment)$type=="Advocacy/Policy Preference"]$color <-"#eb7df4" #40% of ENV ties
+E(g1_environment)[E(g1_environment)$type=="Advocacy/Policy Preference"]$color <-"#00008b" #40% of ENV ties
 
 
 ledges_env <-
@@ -590,7 +593,7 @@ lnodes_env <-
 
 gvis_environment<-toVisNetworkData(g1_environment)
 edges <- gvis_environment$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_environment<-gvis_environment$nodes
 viz_environment <- visNetwork(sort(gvis_environment$nodes),edges,
@@ -710,7 +713,7 @@ lnodes_flood <-
 
 gvis_flooding<-toVisNetworkData(g1_flooding)
 edges <- gvis_flooding$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_flooding<-gvis_flooding$nodes
 viz_flooding <- visNetwork(sort(gvis_flooding$nodes),edges, main="Flooding",width = "100%",height = "850px") %>%
@@ -749,8 +752,8 @@ E(g1_groundwater)[E(g1_groundwater)$type=="Money"]$color <-"#7be141" #18% of all
 E(g1_groundwater)[E(g1_groundwater)$type=="Information"]$color <-"#f6eb14" #18% of all ties
 E(g1_groundwater)[E(g1_groundwater)$type=="Membership"]$color <-"#eb7df4" #%11% of all ties
 E(g1_groundwater)[E(g1_groundwater)$type=="Regulation/Oversight"]$color <-"#fb7e81" #6% of all ties
-E(g1_groundwater)[E(g1_groundwater)$type=="Advocacy/Policy Preference"]$color <-"#97c2fc" #40% of ENV ties
-E(g1_groundwater)[E(g1_groundwater)$type=="Authority to set rules"]$color <-"#ec008c"
+E(g1_groundwater)[E(g1_groundwater)$type=="Advocacy/Policy Preference"]$color <-"#00008b" #40% of ENV ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Authority to set rules"]$color <-"#990000"
 
 
 
@@ -845,7 +848,7 @@ lnodes_gw <-
 
 gvis_groundwater<-toVisNetworkData(g1_groundwater)
 edges <- gvis_groundwater$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_groundwater<-gvis_groundwater$nodes
 viz_groundwater<-visNetwork(sort(gvis_groundwater$nodes),edges, main="Groundwater",width = "100%",height = "850px") %>%
@@ -964,7 +967,7 @@ lnodes_innovate <-
 
 gvis_innovate<-toVisNetworkData(g1_innovation)
 edges <- gvis_innovate$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_innovate<-gvis_innovate$nodes
 viz_innovate<-visNetwork(sort(gvis_innovate$nodes),edges,main="Innovation in Water",width = "100%",height = "850px") %>%
@@ -1002,7 +1005,7 @@ E(g1_municipal)[E(g1_municipal)$type=="Money"]$color <-"#7be141" #18% of all tie
 E(g1_municipal)[E(g1_municipal)$type=="Information"]$color <-"#f6eb14" #18% of all ties
 E(g1_municipal)[E(g1_municipal)$type=="Water"]$color <-"#fb7e81" #8% of all ties
 E(g1_municipal)[E(g1_municipal)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
-E(g1_municipal)[E(g1_municipal)$type=="Advocacy/Policy Preference"]$color <-"00bcf2" #40% of ENV ties
+E(g1_municipal)[E(g1_municipal)$type=="Advocacy/Policy Preference"]$color <-"#00008b" #40% of ENV ties
 
 
 ledges_muni <-
@@ -1091,7 +1094,7 @@ lnodes_muni <-
 
 gvis_muni<-toVisNetworkData(g1_municipal)
 edges <- gvis_muni$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_muni<-gvis_muni$nodes
 viz_muni<-visNetwork(sort(gvis_muni$nodes),edges,main="Municipal Water",width = "100%",height = "850px") %>%
@@ -1217,7 +1220,7 @@ lnodes_og <-
 
 gvis_oilandgas<-toVisNetworkData(g1_oilandgas)
 edges <- gvis_oilandgas$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_agriclulture<-gvis_oilandgas$nodes
 viz_oil <- visNetwork(sort(gvis_oilandgas$nodes),edges, main="Oil and Gas",width = "100%",height = "850px") %>%
@@ -1255,7 +1258,7 @@ E(g1_rural)[E(g1_rural)$type=="Information"]$color <-"#f6eb14" #18% of all ties
 E(g1_rural)[E(g1_rural)$type=="Membership"]$color <-"#eb7df4" #%11% of all ties
 E(g1_rural)[E(g1_rural)$type=="Water"]$color <-"#97c2fc" #8% of all ties
 E(g1_rural)[E(g1_rural)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
-E(g1_rural)[E(g1_rural)$type=="Contract"]$color <-"#00b294" #13% of Rural ties
+E(g1_rural)[E(g1_rural)$type=="Contract"]$color <-"#FFA807" #13% of Rural ties
 
 ledges_rural <-
   data.frame(
@@ -1354,7 +1357,7 @@ lnodes_rural <-
 
 gvis_rural<-toVisNetworkData(g1_rural)
 edges <- gvis_rural$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_rural<-gvis_rural$nodes
 viz_rural <- visNetwork(sort(gvis_rural$nodes), edges, main="Rural",width = "100%",height = "850px") %>%
@@ -1379,15 +1382,15 @@ viz_rural
 
 ```{r save}
 
-saveRDS(g1, file="Texas_Water_Governance/data/g12.rds")
-saveRDS(g1_agriculture, file="Texas_Water_Governance/data/g1_agriculture2.rds")
-saveRDS(g1_environment, file="Texas_Water_Governance/data/g1_environment2.rds")
-saveRDS(g1_flooding, file="Texas_Water_Governance/data/g1_flooding2.rds")
-saveRDS(g1_groundwater, file="Texas_Water_Governance/data/g1_groundwater2.rds")
-saveRDS(g1_innovation, file="Texas_Water_Governance/data/g1_innovation2.rds")
-saveRDS(g1_municipal, file="Texas_Water_Governance/data/g1_municipal2.rds")
-saveRDS(g1_oilandgas, file="Texas_Water_Governance/data/g1_oilandgas2.rds")
-saveRDS(g1_rural, file="Texas_Water_Governance/data/g1_rural2.rds")
+saveRDS(g1, file="texaswg/data/g12.rds")
+saveRDS(g1_agriculture, file="texaswg/data/g1_agriculture2.rds")
+saveRDS(g1_environment, file="texaswg/data/g1_environment2.rds")
+saveRDS(g1_flooding, file="texaswg/data/g1_flooding2.rds")
+saveRDS(g1_groundwater, file="texaswg/data/g1_groundwater2.rds")
+saveRDS(g1_innovation, file="texaswg/data/g1_innovation2.rds")
+saveRDS(g1_municipal, file="texaswg/data/g1_municipal2.rds")
+saveRDS(g1_oilandgas, file="texaswg/data/g1_oilandgas2.rds")
+saveRDS(g1_rural, file="texaswg/data/g1_rural2.rds")
 
 ```
 

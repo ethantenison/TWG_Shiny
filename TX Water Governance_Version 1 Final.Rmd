@@ -171,13 +171,13 @@ g1_ext <- g1
 
 
 E(g1)[E(g1)$sector=="Agriculture"]$color <-"#7be141"
-E(g1)[E(g1)$sector=="Environment"]$color <-"#f6eb14"
-E(g1)[E(g1)$sector=="Flooding"]$color <-"#ad85e4"
-E(g1)[E(g1)$sector=="Groundwater"]$color <-"#00188f"
-E(g1)[E(g1)$sector=="Oil and Gas"]$color <-"#97c2fc"
-E(g1)[E(g1)$sector=="Rural Utilities"]$color <-"#ec008c"
-E(g1)[E(g1)$sector=="Innovation"]$color <-"#00b294"
-E(g1)[E(g1)$sector=="Municipal"]$color <-"#e81123"
+E(g1)[E(g1)$sector=="Environment"]$color <-"#00b294"
+E(g1)[E(g1)$sector=="Flooding"]$color <-"#97c2fc"
+E(g1)[E(g1)$sector=="Groundwater"]$color <-"#ad85e4"
+E(g1)[E(g1)$sector=="Oil and Gas"]$color <-"#fb7e81"
+E(g1)[E(g1)$sector=="Rural Utilities"]$color <-"#ffa807"
+E(g1)[E(g1)$sector=="Innovation"]$color <-"#ec008c"
+E(g1)[E(g1)$sector=="Municipal"]$color <-"#eb7df4"
 
 ledges <-
   data.frame(
@@ -267,7 +267,8 @@ viz_all <-
     smooth = T,
     arrows = list(to = list(
       enabled = TRUE, scaleFactor = .5
-    )),
+    ),
+    width = 3),
     color = list(highlight = "black")
   ) %>% #https://datastorm-open.github.io/visNetwork/edges.html
   visNodes(color = list(
@@ -347,11 +348,11 @@ V(g1_agriculture)[i]$size<-input_attributes$TotalDegree[which(input_attributes$n
 
 E(g1_agriculture)[E(g1_agriculture)$type=="Money"]$color <-"#7be141" #18% of all ties
 E(g1_agriculture)[E(g1_agriculture)$type=="Information"]$color <-"#f6eb14" #18% of all ties
-E(g1_agriculture)[E(g1_agriculture)$type=="Membership"]$color <-"#ad85e4" #%11% of all ties
-E(g1_agriculture)[E(g1_agriculture)$type=="Lobbying"]$color <-"#00188f" #10% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Membership"]$color <-"#eb7df4" #%11% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Lobbying"]$color <-"#ad85e4" #10% of all ties
 E(g1_agriculture)[E(g1_agriculture)$type=="Water"]$color <-"#97c2fc" #8% of all ties
-E(g1_agriculture)[E(g1_agriculture)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
-E(g1_agriculture)[E(g1_agriculture)$type=="Water sales"]$color <-"#e81123" #25% of ties in AG
+E(g1_agriculture)[E(g1_agriculture)$type=="Regulation/Oversight"]$color <-"#fb7e81" #6% of all ties
+E(g1_agriculture)[E(g1_agriculture)$type=="Water sales"]$color <-"#00b294" #25% of ties in AG
 
 
 
@@ -423,7 +424,7 @@ lnodes_ag <-
 
 gvis_agriculture<-toVisNetworkData(g1_agriculture)
 edges <- gvis_agriculture$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 
 viz_ag<-visNetwork(sort(gvis_agriculture$nodes),edges, main="Agriculture",width = "100%",height = "850px") %>%
@@ -456,11 +457,10 @@ V(g1_oilandgas)[i]$type<-input_attributes$type[which(input_attributes$name==V(g1
 V(g1_oilandgas)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V(g1_oilandgas)[i]$name)]
 }
 
-
 E(g1_oilandgas)[E(g1_oilandgas)$type=="Information"]$color <-"#f6eb14" #18% of all ties
-E(g1_oilandgas)[E(g1_oilandgas)$type=="Lobbying"]$color <-"#00188f" #10% of all ties
+E(g1_oilandgas)[E(g1_oilandgas)$type=="Lobbying"]$color <-"#ad85e4" #10% of all ties
 E(g1_oilandgas)[E(g1_oilandgas)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
-E(g1_oilandgas)[E(g1_oilandgas)$type=="Water sales"]$color <-"#e81123" #25% of ties in AG
+E(g1_oilandgas)[E(g1_oilandgas)$type=="Water sales"]$color <-"#00b294" #25% of ties in AG
 
 
 ledges_og <-
@@ -523,7 +523,7 @@ lnodes_og <-
 
 gvis_oilandgas<-toVisNetworkData(g1_oilandgas)
 edges <- gvis_oilandgas$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_agriclulture<-gvis_oilandgas$nodes
 viz_oil <- visNetwork(sort(gvis_oilandgas$nodes),edges, main="Energy",width = "100%",height = "850px") %>%
@@ -559,9 +559,9 @@ V(g1_environment)[i]$size<-input_attributes$TotalDegree[which(input_attributes$n
 
 
 E(g1_environment)[E(g1_environment)$type=="Information"]$color <-"#f6eb14" #18% of all ties
-E(g1_environment)[E(g1_environment)$type=="Lobbying"]$color <-"#00188f" #10% of all ties
-E(g1_environment)[E(g1_environment)$type=="Cooperation/coordination"]$color <-"#004e24" #40% of ENV ties
-E(g1_environment)[E(g1_environment)$type=="Advocacy/Policy Preference"]$color <-"#c77adb" #40% of ENV ties
+E(g1_environment)[E(g1_environment)$type=="Lobbying"]$color <-"#ad85e4" #10% of all ties
+E(g1_environment)[E(g1_environment)$type=="Cooperation/coordination"]$color <-"#ec008c" #40% of ENV ties
+E(g1_environment)[E(g1_environment)$type=="Advocacy/Policy Preference"]$color <-"#00008b" #40% of ENV ties
 
 
 ledges_env <-
@@ -628,7 +628,7 @@ lnodes_env <-
 
 gvis_environment<-toVisNetworkData(g1_environment)
 edges <- gvis_environment$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_environment<-gvis_environment$nodes
 viz_environment <- visNetwork(sort(gvis_environment$nodes),edges,
@@ -665,7 +665,7 @@ V(g1_flooding)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name
 
 E(g1_flooding)[E(g1_flooding)$type=="Money"]$color <-"#7be141" #18% of all ties
 E(g1_flooding)[E(g1_flooding)$type=="Information"]$color <-"#f6eb14" #18% of all ties
-E(g1_flooding)[E(g1_flooding)$type=="Membership"]$color <-"#ad85e4" #%11% of all ties
+E(g1_flooding)[E(g1_flooding)$type=="Membership"]$color <-"#eb7df4" #%11% of all ties
 
 
 
@@ -723,7 +723,7 @@ lnodes_flood <-
 
 gvis_flooding<-toVisNetworkData(g1_flooding)
 edges <- gvis_flooding$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_flooding<-gvis_flooding$nodes
 viz_flooding <- visNetwork(sort(gvis_flooding$nodes),edges, main="Flooding",width = "100%",height = "850px") %>%
@@ -760,10 +760,10 @@ V(g1_groundwater)[i]$size<-input_attributes$TotalDegree[which(input_attributes$n
 
 E(g1_groundwater)[E(g1_groundwater)$type=="Money"]$color <-"#7be141" #18% of all ties
 E(g1_groundwater)[E(g1_groundwater)$type=="Information"]$color <-"#f6eb14" #18% of all ties
-E(g1_groundwater)[E(g1_groundwater)$type=="Membership"]$color <-"#ad85e4" #%11% of all ties
-E(g1_groundwater)[E(g1_groundwater)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
-E(g1_groundwater)[E(g1_groundwater)$type=="Advocacy/Policy Preference"]$color <-"#c77adb" #40% of ENV ties
-E(g1_groundwater)[E(g1_groundwater)$type=="Authority to set rules"]$color <-"#00bcf2"
+E(g1_groundwater)[E(g1_groundwater)$type=="Membership"]$color <-"#eb7df4" #%11% of all ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Regulation/Oversight"]$color <-"#fb7e81" #6% of all ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Advocacy/Policy Preference"]$color <-"#00008b" #40% of ENV ties
+E(g1_groundwater)[E(g1_groundwater)$type=="Authority to set rules"]$color <-"#990000"
 
 
 
@@ -836,7 +836,7 @@ lnodes_gw <-
 
 gvis_groundwater<-toVisNetworkData(g1_groundwater)
 edges <- gvis_groundwater$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_groundwater<-gvis_groundwater$nodes
 viz_groundwater<-visNetwork(sort(gvis_groundwater$nodes),edges, main="Groundwater",width = "100%",height = "850px") %>%
@@ -935,7 +935,7 @@ lnodes_innovate <-
 
 gvis_innovate<-toVisNetworkData(g1_innovation)
 edges <- gvis_innovate$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_innovate<-gvis_innovate$nodes
 viz_innovate<-visNetwork(sort(gvis_innovate$nodes),edges,main="Innovation in Water",width = "100%",height = "850px") %>%
@@ -971,9 +971,9 @@ V(g1_municipal)[i]$size<-input_attributes$TotalDegree[which(input_attributes$nam
 
 E(g1_municipal)[E(g1_municipal)$type=="Money"]$color <-"#7be141" #18% of all ties
 E(g1_municipal)[E(g1_municipal)$type=="Information"]$color <-"#f6eb14" #18% of all ties
-E(g1_municipal)[E(g1_municipal)$type=="Water"]$color <-"#97c2fc" #8% of all ties
+E(g1_municipal)[E(g1_municipal)$type=="Water"]$color <-"#fb7e81" #8% of all ties
 E(g1_municipal)[E(g1_municipal)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
-E(g1_municipal)[E(g1_municipal)$type=="Advocacy/Policy Preference"]$color <-"#c77adb" #40% of ENV ties
+E(g1_municipal)[E(g1_municipal)$type=="Advocacy/Policy Preference"]$color <-"#00008b" #40% of ENV ties
 
 
 ledges_muni <-
@@ -1037,7 +1037,7 @@ lnodes_muni <-
 
 gvis_muni<-toVisNetworkData(g1_municipal)
 edges <- gvis_muni$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_muni<-gvis_muni$nodes
 viz_muni<-visNetwork(sort(gvis_muni$nodes),edges,main="Municipal Water",width = "100%",height = "850px") %>%
@@ -1073,10 +1073,10 @@ V(g1_rural)[i]$size<-input_attributes$TotalDegree[which(input_attributes$name==V
 
 E(g1_rural)[E(g1_rural)$type=="Money"]$color <-"#7be141" #18% of all ties
 E(g1_rural)[E(g1_rural)$type=="Information"]$color <-"#f6eb14" #18% of all ties
-E(g1_rural)[E(g1_rural)$type=="Membership"]$color <-"#ad85e4" #%11% of all ties
+E(g1_rural)[E(g1_rural)$type=="Membership"]$color <-"#eb7df4" #%11% of all ties
 E(g1_rural)[E(g1_rural)$type=="Water"]$color <-"#97c2fc" #8% of all ties
 E(g1_rural)[E(g1_rural)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
-E(g1_rural)[E(g1_rural)$type=="Contract"]$color <-"#00b294" #13% of Rural ties
+E(g1_rural)[E(g1_rural)$type=="Contract"]$color <-"#FFA807" #13% of Rural ties
 
 ledges_rural <-
   data.frame(
@@ -1150,7 +1150,7 @@ lnodes_rural <-
 
 gvis_rural<-toVisNetworkData(g1_rural)
 edges <- gvis_rural$edges
-edges <- edges %>% replace_na(list(color = "gray"))
+edges <- replace(edges, edges == "gray", NA)
 
 nodelist_rural<-gvis_rural$nodes
 viz_rural <- visNetwork(sort(gvis_rural$nodes), edges, main="Rural",width = "100%",height = "850px") %>%
@@ -1175,14 +1175,14 @@ viz_rural
 ```{r savin}
 
 
-saveRDS(g1, file="Texas_Water_Governance/data/g1.rds")
-saveRDS(g1_agriculture, file="Texas_Water_Governance/data/g1_agriculture.rds")
-saveRDS(g1_environment, file="Texas_Water_Governance/data/g1_environment.rds")
-saveRDS(g1_flooding, file="Texas_Water_Governance/data/g1_flooding.rds")
-saveRDS(g1_groundwater, file="Texas_Water_Governance/data/g1_groundwater.rds")
-saveRDS(g1_innovation, file="Texas_Water_Governance/data/g1_innovation.rds")
-saveRDS(g1_municipal, file="Texas_Water_Governance/data/g1_municipal.rds")
-saveRDS(g1_oilandgas, file="Texas_Water_Governance/data/g1_oilandgas.rds")
-saveRDS(g1_rural, file="Texas_Water_Governance/data/g1_rural.rds")
+saveRDS(g1, file="texaswg/data/g1.rds")
+saveRDS(g1_agriculture, file="texaswg/data/g1_agriculture.rds")
+saveRDS(g1_environment, file="texaswg/data/g1_environment.rds")
+saveRDS(g1_flooding, file="texaswg/data/g1_flooding.rds")
+saveRDS(g1_groundwater, file="texaswg/data/g1_groundwater.rds")
+saveRDS(g1_innovation, file="texaswg/data/g1_innovation.rds")
+saveRDS(g1_municipal, file="texaswg/data/g1_municipal.rds")
+saveRDS(g1_oilandgas, file="texaswg/data/g1_oilandgas.rds")
+saveRDS(g1_rural, file="texaswg/data/g1_rural.rds")
 ```
 

@@ -1,0 +1,15 @@
+Network Map Legend	
+	
+Shapes 	
+Circle	Local
+Triangle	Regional
+Square	Statewide
+	
+Nodes	
+#fb7e81	Government
+#ad85e4	NGO
+#7be141	Private
+#ffa807	Utilities
+#f6eb14	Physical Feature
+#97c2fc	Academic
+#eb7df4	Public

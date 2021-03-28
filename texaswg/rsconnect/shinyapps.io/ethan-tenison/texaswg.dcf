@@ -1,0 +1,12 @@
+name: texaswg
+title: texaswg
+username:
+account: ethan-tenison
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3860365
+bundleId: 4399444
+url: https://ethan-tenison.shinyapps.io/texaswg/
+when: 1616792225.01856
+asMultiple: FALSE
+asStatic: FALSE
