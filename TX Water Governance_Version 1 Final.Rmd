@@ -971,7 +971,7 @@ V(g1_municipal)[i]$size<-input_attributes$TotalDegree[which(input_attributes$nam
 
 E(g1_municipal)[E(g1_municipal)$type=="Money"]$color <-"#7be141" #18% of all ties
 E(g1_municipal)[E(g1_municipal)$type=="Information"]$color <-"#f6eb14" #18% of all ties
-E(g1_municipal)[E(g1_municipal)$type=="Water"]$color <-"#fb7e81" #8% of all ties
+E(g1_municipal)[E(g1_municipal)$type=="Water"]$color <-"#97c2fc" #8% of all ties
 E(g1_municipal)[E(g1_municipal)$type=="Regulation/Oversight"]$color <-"#ec008c" #6% of all ties
 E(g1_municipal)[E(g1_municipal)$type=="Advocacy/Policy Preference"]$color <-"#00008b" #40% of ENV ties
 

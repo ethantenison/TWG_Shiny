@@ -136,57 +136,78 @@ titles <- list(
 # ------------------------------- #
 # ------------------------------- #
 
-ui <- fluidPage(
-
-    # Application title
-    titlePanel(
-        h1("Texas Water Governance Network", align = "center")),
-
-    # Sidebar with a slider input for number of bins 
+ui <- fluidPage(# Application title
+    titlePanel(h1("Texas Water Governance Network", align = "center")),
+    
+    # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
-           
-            selectInput("focus", "Network Focus",
-                        c("Edges and Nodes",
-                        "Edge Focused",
-                        "Node Focused")),
+            selectInput(
+                "focus",
+                "Network Focus",
+                c("Edges and Nodes",
+                  "Edge Focused",
+                  "Node Focused")
+            ),
             
-            selectInput("sectors", "Sector",
-                        c("All Sectors" = "g1",
-                          "Agriculture" = "g1_agriculture",
-                          "Groundwater" = "g1_environment",
-                          "Oil and Gas" = "g1_oilandgas",
-                          "Rural Utilities" = "g1_rural",
-                          "Municipal" = "g1_municipal",
-                          "Environment" = "g1_environment",
-                          "Flooding" = "g1_flooding",
-                          "Innovation" = "g1_innovation")),
+            selectInput(
+                "sectors",
+                "Sector",
+                c(
+                    "All Sectors" = "g1",
+                    "Agriculture" = "g1_agriculture",
+                    "Groundwater" = "g1_environment",
+                    "Oil and Gas" = "g1_oilandgas",
+                    "Rural Utilities" = "g1_rural",
+                    "Municipal" = "g1_municipal",
+                    "Environment" = "g1_environment",
+                    "Flooding" = "g1_flooding",
+                    "Innovation" = "g1_innovation"
+                )
+            ),
             
-            sliderInput("edge_width", "Edge Width",
-                        min = 0, max = 10,
-                        value = 2),
+            sliderInput(
+                "edge_width",
+                "Edge Width",
+                min = 0,
+                max = 10,
+                value = 2
+            ),
             
-            sliderInput("node_size", "Node Size",
-                        min = 0, max = 10,
-                        value = 2),
+            sliderInput(
+                "node_size",
+                "Node Size",
+                min = 0,
+                max = 10,
+                value = 2
+            ),
+            prettySwitch(
+                "edgenames",
+                label = "Edge Names",
+                bigger = FALSE,
+                value = FALSE
+            ),
+            prettySwitch(
+                "nodenames",
+                label = "Node Names",
+                bigger = FALSE,
+                value = FALSE
+            ),
             
-           imageOutput("legend"),
+            imageOutput("legend"),
             
             
             
         ),
-
+        
         # Show a plot of the generated distribution
-        mainPanel(
+        mainPanel(tabsetPanel(
+            type = "tabs",
+            tabPanel("Plot", visNetworkOutput("twg_network", height = "800px")),
+            tabPanel("Table", DT::dataTableOutput("table"))
             
-        tabsetPanel(type = "tabs",
-                    tabPanel("Plot", visNetworkOutput("twg_network",height = "800px")),
-                    tabPanel("Table", DT::dataTableOutput("table"))
-            
-        )
-        )
-    )
-)
+        ))
+    ))
 
 # ------------------------------- #
 # ------------------------------- #
@@ -283,10 +304,79 @@ server <- function(input, output, session) {
             toVisNetworkData(combined_data[[input$focus]][[input$sectors]])
         
         nodes <- sort(gvis$nodes)
+        nodes$title <-
+            paste(
+                "<p>",
+                "Name: ",
+                nodes$label,
+                "<br>Domain: ",
+                nodes$level,
+                "<br>Type: ",
+                nodes$type,
+                "<br>Connections: ",
+                nodes$size,
+                "</p>"
+            )
         nodes$size <- nodes$size + input$node_size * 2
         
+        if (input$nodenames == FALSE) {
+            nodes$label <- ""
+        }
+        
         edges <- gvis$edges
-        edges$label <- edges$type
+        edges$color[edges$type == "Water"] <- "#97c2fc"
+        edges$verb <- ""
+        edges$verb[edges$type == "Advocacy/Policy Preference"] <- "advocate for"
+        edges$verb[edges$type == "Information"] <- "send information to"
+        edges$verb[edges$type == "Authority to set rules"] <- "has the authority to set rules for"
+        edges$verb[edges$type == "Contract"] <- "contract"
+        edges$verb[edges$type == "Cooperation/coordination"] <- "cooperate and/or coordinate with"
+        edges$verb[edges$type == "Water rights/regulation of"] <- "regulate the water rights for"
+        edges$verb[edges$type == "Grants"] <- "provide grants to"
+        edges$verb[edges$type == "Infrastruture Services"] <- "provide infrastruture services to"
+        edges$verb[edges$type == "Water"] <- "provide water to"
+        edges$verb[edges$type == "Regulation/Oversight"] <- "regulate"
+        edges$verb[edges$type == "Litigation"] <- "litigate"
+        edges$verb[edges$type == "Money"] <- "pay"
+        edges$verb[edges$type == "Lobbying"] <- "lobby"
+        edges$verb[edges$type == "Membership"] <- "are members of"
+        edges$verb[edges$type == "Permits/Authorization"] <- "issue permits or authorize"
+        edges$verb[edges$type == "Ecosystem service"] <- "provide ecosystem services to"
+        edges$verb[edges$type == "Water disposal"] <- "dispose water for"
+        edges$verb[edges$type == "Water sales"] <- "sell water to"
+        edges$verb[edges$type == "Water Savings"] <- "save water for"
+        edges$verb[edges$type == ""] <- "provides unknown services for"
+        
+        edges$verb[edges$from == "Bureau Economic Geology" & edges$type == "Information"] <- "sends information to"
+        edges$verb[edges$from == "Aquifer" & edges$type == "Water"] <- "provides water to"
+        edges$verb[edges$from == "Aquifer" & edges$type == "Water Savings"] <- "saves water for"
+        
+        edges$title<- paste(edges$from, edges$verb, edges$to)
+        
+        
+        
+        
+        
+        
+        if (input$edgenames == FALSE) {
+            edges$label <- ""
+        }
+        else if (input$focus == "Edges and Nodes" &
+                 input$sectors == "g1" |
+                 input$focus == "Edge Focused" &
+                 input$sectors == "g1" &
+                 input$edgenames == TRUE) {
+            edges$label <- edges$sector
+            
+        }
+        
+        else if (input$focus == "Node Focused" &
+                 input$edgenames == TRUE) {
+            edges$label <- edges$sector
+        }
+        else {
+            edges$label <- edges$type
+        }
         
         network <- visNetwork(
             nodes,
@@ -311,8 +401,9 @@ server <- function(input, output, session) {
             )) %>%
             visIgraphLayout(
                 smooth = list(enabled = T, type = 'dynamic'),
-                physics = FALSE,
-                layout = "layout_with_fr",
+                physics = list(stabilization = F,solver = "forceAtlas2Based", 
+                               forceAtlas2Based = list(gravitationalConstant = -500)),
+                layout = "layout_with_kk",
                 randomSeed = 27
             ) %>%
             visInteraction(navigationButtons = TRUE) %>%
@@ -323,19 +414,7 @@ server <- function(input, output, session) {
             ) %>%
             addFontAwesome()
         
-        if (input$focus == "Edges and Nodes" &
-            input$sectors == "g1" |
-            input$focus == "Edge Focused" &
-            input$sectors == "g1" |
-            input$focus == "Node Focused" & input$sectors == "g1") {
-            network$x$nodes <-
-                network$x$nodes %>% left_join(cords, by = 'id') %>% select(-c('x.x', 'y.x')) %>% rename(x = x.y, y =
-                                                                                                            y.y)
-            network
-        }
-        else {
-            network
-        }
+        network
         
     })
     
@@ -349,9 +428,11 @@ server <- function(input, output, session) {
             nodelist %>% dplyr::select('id', 'level', 'type', 'size') %>% dplyr::rename(
                 "Node" = "id",
                 "Juristication" = "level",
-                "Oragnizatino Type" = "type",
+                "Oragnization Type" = "type",
                 "Number of Connections" = "size"
-            )
+            ) %>% 
+            dplyr::arrange(desc(`Number of Connections`))
+        
         
         datatable(nodelist, options = list(pageLength = 20))
     })
@@ -361,5 +442,5 @@ server <- function(input, output, session) {
 # ------------------------------- #
 # -----Run the application------- #
 # ------------------------------- #
-# ------------------------------- # 
+# ------------------------------- #
 shinyApp(ui = ui, server = server)
