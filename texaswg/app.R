@@ -138,38 +138,39 @@ titles <- list(
 # ------------------------------- #
 # ------------------------------- #
 
-jsToggleFS <- 'shinyjs.toggleFullScreen = function() {
-    var element = document.documentElement,
-enterFS = element.requestFullscreen || element.msRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen,
-exitFS = document.exitFullscreen || document.msExitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
-if (!document.fullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
-enterFS.call(element);
-} else {
-exitFS.call(document);
-}
-}'
+# jsToggleFS <- 'shinyjs.toggleFullScreen = function() {
+#     var element = document.documentElement,
+# enterFS = element.requestFullscreen || element.msRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen,
+# exitFS = document.exitFullscreen || document.msExitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
+# if (!document.fullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+# enterFS.call(element);
+# } else {
+# exitFS.call(document);
+# }
+# }'
 
 
 
-header <- dashboardHeader(title = tags$a(tags$img(src='images/texas_water_lbj.png', width='70%'))
-)
+header <-
+    dashboardHeader(title = tags$a(tags$img(src = 'images/texas_water_lbj.png', width =
+                                                '70%')))
 
 sidebar <- dashboardSidebar(
-    useShinyjs(),
-    shinyjs::extendShinyjs(text = jsToggleFS, functions = "toggleFullScreen"),
+    #useShinyjs(),
+    #shinyjs::extendShinyjs(text = jsToggleFS, functions = "toggleFullScreen"),
     sidebarMenu(
         id = "tabs",
         menuItem("Network Graph",
                  tabName = "graph", icon = icon("home")),
         conditionalPanel(
             condition = "input.tabs == 'graph'",
-                selectInput(
-                    "focus",
-                    "Network Focus",
-                    c("Edges and Nodes",
-                      "Edge Focused",
-                      "Node Focused")
-                ),
+            selectInput(
+                "focus",
+                "Network Focus",
+                c("Edges and Nodes",
+                  "Edge Focused",
+                  "Node Focused")
+            ),
             selectInput(
                 "sectors",
                 "Sector",
@@ -187,7 +188,7 @@ sidebar <- dashboardSidebar(
             ),
             sliderInput(
                 "edge_width",
-                "Edge Width",
+                "Line Width",
                 min = 0,
                 max = 10,
                 value = 2
@@ -201,7 +202,7 @@ sidebar <- dashboardSidebar(
             ),
             prettySwitch(
                 "edgenames",
-                label = "Edge Names",
+                label = "Line Names",
                 bigger = FALSE,
                 value = FALSE
             ),
@@ -214,25 +215,35 @@ sidebar <- dashboardSidebar(
             
             #imageOutput("legend")
         ),
-        menuItem("Network Data",
-                 tabName = "table", icon = icon("phone-square")),
-        conditionalPanel(
-            condition = "input.tabs == 'table'",
-            selectInput(
-                "sectors_table",
-                "Sector",
-                c(
-                    "All Sectors" = "g1",
-                    "Agriculture" = "g1_agriculture",
-                    "Groundwater" = "g1_environment",
-                    "Oil and Gas" = "g1_oilandgas",
-                    "Rural Utilities" = "g1_rural",
-                    "Municipal" = "g1_municipal",
-                    "Environment" = "g1_environment",
-                    "Flooding" = "g1_flooding",
-                    "Innovation" = "g1_innovation"
-                )
-            ))
+        menuItem(
+            "Network Data",
+            tabName = "table",
+            icon = icon("phone-square")
+        ),
+        conditionalPanel(condition = "input.tabs == 'table'",
+                         selectInput(
+                             "sectors_table",
+                             "Sector",
+                             c(
+                                 "All Sectors" = "g1",
+                                 "Agriculture" = "g1_agriculture",
+                                 "Groundwater" = "g1_environment",
+                                 "Oil and Gas" = "g1_oilandgas",
+                                 "Rural Utilities" = "g1_rural",
+                                 "Municipal" = "g1_municipal",
+                                 "Environment" = "g1_environment",
+                                 "Flooding" = "g1_flooding",
+                                 "Innovation" = "g1_innovation"
+                             )
+                         )),
+        hr(style = "margin-top: 5px; margin-bottom: 5px; width:90%"),
+        HTML(
+            "<h4 style='color:#ffffff; padding: 3px 5px 5px 17px; display:block'><i class='fa fa-toolbox'></i> Dashboard Tools</h4>"
+        ),
+        HTML(
+            "<button type='button' class='btn btn-default action-button shiny-bound-input' style='display: block; margin: 6px 5px 6px 15px; width: 200px;color: #152934;' onclick = 'shinyjs.toggleFullScreen();'><i class='fa fa-expand fa-pull-left'></i> Fullscreen</button>"
+        ),
+        hr(style = "margin-top: 15px; margin-bottom: 5px; width:90%")
     )
     
 )
@@ -242,11 +253,11 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(tags$head(tags$script(src = "wordwrap.js")),
                       tabItems(
                           tabItem(tabName = "graph",
-                                  fluidRow(h1(
-                                      "Texas Water Governance",
-                                      align = "center"
+                                  fluidRow(
+                                      h1("Texas Water Governance",
+                                         align = "center"),
+                                      hr()
                                   ),
-                                  hr()),
                                   fluidRow(
                                       column(width = 9,
                                              box(
@@ -258,12 +269,13 @@ body <- dashboardBody(tags$head(tags$script(src = "wordwrap.js")),
                                   )),
                           tabItem(tabName = "table",
                                   fluidRow(DT::dataTableOutput("table")))
-                      ))           
-    ui <- dashboardPage(skin = "blue",
-                        header = header,
-                        sidebar = sidebar,
-                        body = body
-    )
+                      ))
+ui <- dashboardPage(
+    skin = "blue",
+    header = header,
+    sidebar = sidebar,
+    body = body
+)
 
 # ------------------------------- #
 # ------------------------------- #
@@ -382,32 +394,53 @@ server <- function(input, output, session) {
         edges <- gvis$edges
         edges$color[edges$type == "Water"] <- "#97c2fc"
         edges$verb <- ""
-        edges$verb[edges$type == "Advocacy/Policy Preference"] <- "advocate for"
-        edges$verb[edges$type == "Information"] <- "send information to"
-        edges$verb[edges$type == "Authority to set rules"] <- "has the authority to set rules for"
+        edges$verb[edges$type == "Advocacy/Policy Preference"] <-
+            "advocate for"
+        edges$verb[edges$type == "Information"] <-
+            "send information to"
+        edges$verb[edges$type == "Authority to set rules"] <-
+            "has the authority to set rules for"
         edges$verb[edges$type == "Contract"] <- "contract"
-        edges$verb[edges$type == "Cooperation/coordination"] <- "cooperate and/or coordinate with"
-        edges$verb[edges$type == "Water rights/regulation of"] <- "regulate the water rights for"
-        edges$verb[edges$type == "Grants"] <- "provide grants to"
-        edges$verb[edges$type == "Infrastruture Services"] <- "provide infrastruture services to"
+        edges$verb[edges$type == "Cooperation/coordination"] <-
+            "cooperate and/or coordinate with"
+        edges$verb[edges$type == "Water rights/regulation of"] <-
+            "regulate the water rights for"
+        edges$verb[edges$type == "Grants"] <-
+            "provide grants to"
+        edges$verb[edges$type == "Infrastruture Services"] <-
+            "provide infrastruture services to"
         edges$verb[edges$type == "Water"] <- "provide water to"
-        edges$verb[edges$type == "Regulation/Oversight"] <- "regulate"
+        edges$verb[edges$type == "Regulation/Oversight"] <-
+            "regulate"
         edges$verb[edges$type == "Litigation"] <- "litigate"
         edges$verb[edges$type == "Money"] <- "pay"
         edges$verb[edges$type == "Lobbying"] <- "lobby"
-        edges$verb[edges$type == "Membership"] <- "are members of"
-        edges$verb[edges$type == "Permits/Authorization"] <- "issue permits or authorize"
-        edges$verb[edges$type == "Ecosystem service"] <- "provide ecosystem services to"
-        edges$verb[edges$type == "Water disposal"] <- "dispose water for"
-        edges$verb[edges$type == "Water sales"] <- "sell water to"
-        edges$verb[edges$type == "Water Savings"] <- "save water for"
-        edges$verb[edges$type == ""] <- "provides unknown services for"
+        edges$verb[edges$type == "Membership"] <-
+            "are members of"
+        edges$verb[edges$type == "Permits/Authorization"] <-
+            "issue permits or authorize"
+        edges$verb[edges$type == "Ecosystem service"] <-
+            "provide ecosystem services to"
+        edges$verb[edges$type == "Water disposal"] <-
+            "dispose water for"
+        edges$verb[edges$type == "Water sales"] <-
+            "sell water to"
+        edges$verb[edges$type == "Water Savings"] <-
+            "save water for"
+        edges$verb[edges$type == ""] <-
+            "provides unknown services for"
         
-        edges$verb[edges$from == "Bureau Economic Geology" & edges$type == "Information"] <- "sends information to"
-        edges$verb[edges$from == "Aquifer" & edges$type == "Water"] <- "provides water to"
-        edges$verb[edges$from == "Aquifer" & edges$type == "Water Savings"] <- "saves water for"
+        edges$verb[edges$from == "Bureau Economic Geology" &
+                       edges$type == "Information"] <-
+            "sends information to"
+        edges$verb[edges$from == "Aquifer" &
+                       edges$type == "Water"] <-
+            "provides water to"
+        edges$verb[edges$from == "Aquifer" &
+                       edges$type == "Water Savings"] <-
+            "saves water for"
         
-        edges$title<- paste(edges$from, edges$verb, edges$to)
+        edges$title <- paste(edges$from, edges$verb, edges$to)
         
         
         
@@ -457,8 +490,11 @@ server <- function(input, output, session) {
             )) %>%
             visIgraphLayout(
                 smooth = list(enabled = T, type = 'dynamic'),
-                physics = list(stabilization = F,solver = "forceAtlas2Based", 
-                               forceAtlas2Based = list(gravitationalConstant = -500)),
+                physics = list(
+                    stabilization = F,
+                    solver = "forceAtlas2Based",
+                    forceAtlas2Based = list(gravitationalConstant = -500)
+                ),
                 layout = "layout_with_kk",
                 randomSeed = 27
             ) %>%
@@ -482,12 +518,32 @@ server <- function(input, output, session) {
         rownames(nodelist) <- NULL
         nodelist <-
             nodelist %>% dplyr::select('id', 'level', 'type', 'size') %>% dplyr::rename(
-                "Node" = "id",
-                "Juristication" = "level",
-                "Oragnization Type" = "type",
-                "Number of Connections" = "size"
-            ) %>% 
-            dplyr::arrange(desc(`Number of Connections`))
+                "Organization" = "id",
+                "Juristiction" = "level",
+                "Organization Type" = "type",
+                "Total Connections" = "size"
+            ) %>%
+            dplyr::arrange(desc(`Total Connections`))
+        
+        edgelist <- gvis$edges
+        edgecount_from <- count(edgelist, vars = from)
+        edgecount_to <- count(edgelist, vars = to)
+        edgescount <-
+            edgecount_from %>% full_join(edgecount_to, by = "vars")
+        edgescount[is.na(edgescount)] <- 0
+        edgescount <-
+            edgescount %>% mutate(connections = n.x + n.y)
+        
+        nodelist <-
+            nodelist %>% left_join(edgescount, by = c("Organization" = "vars")) %>% rename("Connections from" = "n.x",
+                                                                                           "Connections to" = "n.y") %>% select(
+                                                                                               "Organization",
+                                                                                               "Connections from",
+                                                                                               "Connections to",
+                                                                                               "connections",
+                                                                                               "Organization Type",
+                                                                                               "Juristiction"
+                                                                                           )
         
         
         datatable(nodelist, options = list(pageLength = 20))
