@@ -23,7 +23,9 @@ library(htmlTable)
 library(htmlwidgets)
 library(ggmap)
 library(rsconnect)
-
+library(shinyjs)
+library(shinydashboard)
+library(shinydashboardPlus)
 
 # ------------------------------- #
 # ------------------------------- #
@@ -136,20 +138,38 @@ titles <- list(
 # ------------------------------- #
 # ------------------------------- #
 
-ui <- fluidPage(# Application title
-    titlePanel(h1("Texas Water Governance Network", align = "center")),
-    
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            selectInput(
-                "focus",
-                "Network Focus",
-                c("Edges and Nodes",
-                  "Edge Focused",
-                  "Node Focused")
-            ),
-            
+jsToggleFS <- 'shinyjs.toggleFullScreen = function() {
+    var element = document.documentElement,
+enterFS = element.requestFullscreen || element.msRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen,
+exitFS = document.exitFullscreen || document.msExitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
+if (!document.fullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+enterFS.call(element);
+} else {
+exitFS.call(document);
+}
+}'
+
+
+
+header <- dashboardHeader(title = tags$a(tags$img(src='images/texas_water_lbj.png', width='70%'))
+)
+
+sidebar <- dashboardSidebar(
+    useShinyjs(),
+    shinyjs::extendShinyjs(text = jsToggleFS, functions = "toggleFullScreen"),
+    sidebarMenu(
+        id = "tabs",
+        menuItem("Network Graph",
+                 tabName = "graph", icon = icon("home")),
+        conditionalPanel(
+            condition = "input.tabs == 'graph'",
+                selectInput(
+                    "focus",
+                    "Network Focus",
+                    c("Edges and Nodes",
+                      "Edge Focused",
+                      "Node Focused")
+                ),
             selectInput(
                 "sectors",
                 "Sector",
@@ -165,7 +185,6 @@ ui <- fluidPage(# Application title
                     "Innovation" = "g1_innovation"
                 )
             ),
-            
             sliderInput(
                 "edge_width",
                 "Edge Width",
@@ -173,7 +192,6 @@ ui <- fluidPage(# Application title
                 max = 10,
                 value = 2
             ),
-            
             sliderInput(
                 "node_size",
                 "Node Size",
@@ -194,20 +212,58 @@ ui <- fluidPage(# Application title
                 value = FALSE
             ),
             
-            imageOutput("legend"),
-            
-            
-            
+            #imageOutput("legend")
         ),
-        
-        # Show a plot of the generated distribution
-        mainPanel(tabsetPanel(
-            type = "tabs",
-            tabPanel("Plot", visNetworkOutput("twg_network", height = "800px")),
-            tabPanel("Table", DT::dataTableOutput("table"))
-            
-        ))
-    ))
+        menuItem("Network Data",
+                 tabName = "table", icon = icon("phone-square")),
+        conditionalPanel(
+            condition = "input.tabs == 'table'",
+            selectInput(
+                "sectors_table",
+                "Sector",
+                c(
+                    "All Sectors" = "g1",
+                    "Agriculture" = "g1_agriculture",
+                    "Groundwater" = "g1_environment",
+                    "Oil and Gas" = "g1_oilandgas",
+                    "Rural Utilities" = "g1_rural",
+                    "Municipal" = "g1_municipal",
+                    "Environment" = "g1_environment",
+                    "Flooding" = "g1_flooding",
+                    "Innovation" = "g1_innovation"
+                )
+            ))
+    )
+    
+)
+
+
+
+body <- dashboardBody(tags$head(tags$script(src = "wordwrap.js")),
+                      tabItems(
+                          tabItem(tabName = "graph",
+                                  fluidRow(h1(
+                                      "Texas Water Governance",
+                                      align = "center"
+                                  ),
+                                  hr()),
+                                  fluidRow(
+                                      column(width = 9,
+                                             box(
+                                                 width = 12,
+                                                 visNetworkOutput("twg_network", height = "650px")
+                                             )),
+                                      column(width = 3,
+                                             box(width = 12, imageOutput("legend")))
+                                  )),
+                          tabItem(tabName = "table",
+                                  fluidRow(DT::dataTableOutput("table")))
+                      ))           
+    ui <- dashboardPage(skin = "blue",
+                        header = header,
+                        sidebar = sidebar,
+                        body = body
+    )
 
 # ------------------------------- #
 # ------------------------------- #
@@ -406,7 +462,7 @@ server <- function(input, output, session) {
                 layout = "layout_with_kk",
                 randomSeed = 27
             ) %>%
-            visInteraction(navigationButtons = TRUE) %>%
+            visInteraction(navigationButtons = FALSE) %>%
             visOptions(
                 selectedBy = list(variable = c("type"), multiple = TRUE),
                 highlightNearest = list(enabled = T, hover = T),
@@ -420,7 +476,7 @@ server <- function(input, output, session) {
     
     output$table <- renderDataTable({
         gvis <-
-            toVisNetworkData(combined_data[[input$focus]][[input$sectors]])
+            toVisNetworkData(combined_data[["Edges and Nodes"]][[input$sectors_table]])
         nodelist <- gvis$nodes
         nodelist$size <- as.integer(nodelist$size)
         rownames(nodelist) <- NULL
