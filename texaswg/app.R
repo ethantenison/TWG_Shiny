@@ -138,30 +138,29 @@ titles <- list(
 # ------------------------------- #
 # ------------------------------- #
 
-# jsToggleFS <- 'shinyjs.toggleFullScreen = function() {
-#     var element = document.documentElement,
-# enterFS = element.requestFullscreen || element.msRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen,
-# exitFS = document.exitFullscreen || document.msExitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
-# if (!document.fullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
-# enterFS.call(element);
-# } else {
-# exitFS.call(document);
-# }
-# }'
+jsToggleFS <- 'shinyjs.toggleFullScreen = function() {
+     var element = document.documentElement,
+ enterFS = element.requestFullscreen || element.msRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen,
+ exitFS = document.exitFullscreen || document.msExitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen;
+ if (!document.fullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+ enterFS.call(element);
+ } else {
+ exitFS.call(document);
+ }
+ }'
 
 
 
 header <-
-    dashboardHeader(title = tags$a(tags$img(src = 'images/texas_water_lbj.png', width =
-                                                '70%')))
+    dashboardHeader(title = "Controls")
 
 sidebar <- dashboardSidebar(
-    #useShinyjs(),
-    #shinyjs::extendShinyjs(text = jsToggleFS, functions = "toggleFullScreen"),
+    useShinyjs(),
+    shinyjs::extendShinyjs(text = jsToggleFS, functions = "toggleFullScreen"),
     sidebarMenu(
         id = "tabs",
         menuItem("Network Graph",
-                 tabName = "graph", icon = icon("home")),
+                 tabName = "graph", icon = icon("project-diagram")),
         conditionalPanel(
             condition = "input.tabs == 'graph'",
             selectInput(
@@ -212,13 +211,18 @@ sidebar <- dashboardSidebar(
                 bigger = FALSE,
                 value = FALSE
             ),
-            
-            #imageOutput("legend")
+            actionButton(
+                "help",
+                "Tutorial",
+                icon = icon("book-open", class = "fa-pull-left"),
+                style = "display: block; margin: 0 auto; width: 200px;color: #152934"
+            ),
+            hr(style = "margin-top: 5px; margin-bottom: 5px; width:90%"),
         ),
         menuItem(
             "Network Data",
             tabName = "table",
-            icon = icon("phone-square")
+            icon = icon("table")
         ),
         conditionalPanel(condition = "input.tabs == 'table'",
                          selectInput(
@@ -250,26 +254,41 @@ sidebar <- dashboardSidebar(
 
 
 
-body <- dashboardBody(tags$head(tags$script(src = "wordwrap.js")),
-                      tabItems(
-                          tabItem(tabName = "graph",
-                                  fluidRow(
-                                      h1("Texas Water Governance",
-                                         align = "center"),
-                                      hr()
-                                  ),
-                                  fluidRow(
-                                      column(width = 9,
-                                             box(
-                                                 width = 12,
-                                                 visNetworkOutput("twg_network", height = "650px")
-                                             )),
-                                      column(width = 3,
-                                             box(width = 12, imageOutput("legend")))
-                                  )),
-                          tabItem(tabName = "table",
-                                  fluidRow(DT::dataTableOutput("table")))
-                      ))
+body <- dashboardBody(tags$head(
+    tags$script(src = "wordwrap.js"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+    tags$link(
+        rel = "stylesheet",
+        href = "https://use.fontawesome.com/releases/v5.1.0/css/all.css",
+        integrity = "sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt",
+        crossorigin = "anonymous"
+    )
+),
+tabItems(
+    tabItem(tabName = "graph",
+            fluidRow(
+                #img(src = "images/logo2.png", height = "50%", width = "50%", align = "center"),
+                HTML('<center><img src="images/logo2.png" width="1000"></center>'),
+                #h1("Texas Water Governance",
+                 #  align = "center"),
+                hr()
+            ),
+            fluidRow(
+                column(width = 9,
+                       box(
+                           width = 12,
+                           visNetworkOutput("twg_network", height = "650px")
+                       )),
+                column(width = 3,
+                       box(width = 12, imageOutput("legend")))
+            )),
+    tabItem(tabName = "table",
+            fluidRow(
+                HTML('<center><img src="images/logo2.png" width="1000"></center>'),
+                hr()
+            ),
+            fluidRow(box(width = 12, DT::dataTableOutput("table"))))
+))
 ui <- dashboardPage(
     skin = "blue",
     header = header,
@@ -543,10 +562,10 @@ server <- function(input, output, session) {
                                                                                                "connections",
                                                                                                "Organization Type",
                                                                                                "Juristiction"
-                                                                                           )
+                                                                                           ) %>% rename("Total Connections" = "connections")
         
         
-        datatable(nodelist, options = list(pageLength = 20))
+        datatable(nodelist, options = list(pageLength = 15), height = "200px")
     })
 }
 
