@@ -1123,6 +1123,8 @@ line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
 	text-shadow: rgba(0, 0, 0, .01) 0 0 1px;
 	font-weight:900;
+	margin: 5px;
+  	padding: 5px;
 	}
 
 .h1, .h2, h1, h2, {

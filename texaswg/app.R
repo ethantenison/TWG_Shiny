@@ -119,15 +119,15 @@ combined_data <- list(
 
 
 titles <- list(
-    "g1" = "All Sectors" ,
-    "g1_agriculture" = "Agriculture",
-    "g1_environment" = "Groundwater",
-    "g1_oilandgas" = "Oil and Gas",
-    "g1_rural" = "Rural Utilities",
-    "g1_municipal" = "Municipal",
-    "g1_environment" = "Environment",
-    "g1_flooding" = "Flooding",
-    "g1_innovation" = "Innovation"
+    "g1" = "Network Graph - All Sectors" ,
+    "g1_agriculture" = "Network Graph - Agriculture",
+    "g1_environment" = "Network Graph - Groundwater",
+    "g1_oilandgas" = "Network Graph - Oil and Gas",
+    "g1_rural" = "Network Graph - Rural Utilities",
+    "g1_municipal" = "Network Graph - Municipal",
+    "g1_environment" = "Network Graph - Environment",
+    "g1_flooding" = "Network Graph - Flooding",
+    "g1_innovation" = "Network Graph - Innovation"
 )
 
 
@@ -152,15 +152,18 @@ jsToggleFS <- 'shinyjs.toggleFullScreen = function() {
 
 
 header <-
-    dashboardHeader(title = "Controls")
+    dashboardHeader(title = h2("Controls", align = "center"))
 
 sidebar <- dashboardSidebar(
     useShinyjs(),
     shinyjs::extendShinyjs(text = jsToggleFS, functions = "toggleFullScreen"),
     sidebarMenu(
         id = "tabs",
-        menuItem("Network Graph",
-                 tabName = "graph", icon = icon("project-diagram")),
+        menuItem(
+            "Network Graph",
+            tabName = "graph",
+            icon = icon("project-diagram")
+        ),
         conditionalPanel(
             condition = "input.tabs == 'graph'",
             selectInput(
@@ -219,11 +222,9 @@ sidebar <- dashboardSidebar(
             ),
             hr(style = "margin-top: 5px; margin-bottom: 5px; width:90%"),
         ),
-        menuItem(
-            "Network Data",
-            tabName = "table",
-            icon = icon("table")
-        ),
+        menuItem("Network Data",
+                 tabName = "table",
+                 icon = icon("table")),
         conditionalPanel(condition = "input.tabs == 'table'",
                          selectInput(
                              "sectors_table",
@@ -254,41 +255,63 @@ sidebar <- dashboardSidebar(
 
 
 
-body <- dashboardBody(tags$head(
-    tags$script(src = "wordwrap.js"),
-    tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
-    tags$link(
-        rel = "stylesheet",
-        href = "https://use.fontawesome.com/releases/v5.1.0/css/all.css",
-        integrity = "sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt",
-        crossorigin = "anonymous"
+body <- dashboardBody(
+    tags$head(
+        tags$script(src = "wordwrap.js"),
+        tags$link(rel = "stylesheet", type = "text/css", href = "custom.css"),
+        tags$link(
+            rel = "stylesheet",
+            href = "https://use.fontawesome.com/releases/v5.1.0/css/all.css",
+            integrity = "sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt",
+            crossorigin = "anonymous"
+        )
+    ),
+    tags$head(tags$style(
+        HTML(
+            '
+        /* logo */
+        .skin-blue .main-header .logo {
+                              background-color: #97c2fc;
+                              }
+
+        /* logo when hovered */
+        .skin-blue .main-header .logo:hover {
+                              background-color: #97c2fc;
+        /* Network Title */                      }
+        #network_title, #network_title_legend{color: #152934;
+                                 font-size: 20px;
+                                 }'
+        )
+    )),
+    tabItems(
+        tabItem(tabName = "graph",
+                fluidRow(
+                    HTML('<center><img src="images/logo2.png" width="1000"></center>'),
+                    hr()
+                ),
+                fluidRow(
+                    column(width = 9,
+                           box(
+                               title = textOutput("network_title"),
+                               width = 12,
+                               visNetworkOutput("twg_network", height = "650px")
+                           )),
+                    column(width = 3,
+                           box(
+                               title = textOutput("network_title_legend"), 
+                               width = 12,
+                               imageOutput("legend")))
+                )),
+        tabItem(tabName = "table",
+                fluidRow(
+                    HTML('<center><img src="images/logo2.png" width="1000"></center>'),
+                    hr()
+                ),
+                fluidRow(box(
+                    width = 12, DT::dataTableOutput("table")
+                )))
     )
-),
-tabItems(
-    tabItem(tabName = "graph",
-            fluidRow(
-                #img(src = "images/logo2.png", height = "50%", width = "50%", align = "center"),
-                HTML('<center><img src="images/logo2.png" width="1000"></center>'),
-                #h1("Texas Water Governance",
-                 #  align = "center"),
-                hr()
-            ),
-            fluidRow(
-                column(width = 9,
-                       box(
-                           width = 12,
-                           visNetworkOutput("twg_network", height = "650px")
-                       )),
-                column(width = 3,
-                       box(width = 12, imageOutput("legend")))
-            )),
-    tabItem(tabName = "table",
-            fluidRow(
-                HTML('<center><img src="images/logo2.png" width="1000"></center>'),
-                hr()
-            ),
-            fluidRow(box(width = 12, DT::dataTableOutput("table"))))
-))
+)
 ui <- dashboardPage(
     skin = "blue",
     header = header,
@@ -304,6 +327,10 @@ ui <- dashboardPage(
 # ------------------------------- #
 
 server <- function(input, output, session) {
+    
+    output$network_title <- renderText({ titles[[input$sectors]] })
+    output$network_title_legend <- renderText({ "Network Graph Legend"})
+    
     output$legend <- renderImage({
         if (input$focus == "Edges and Nodes" & input$sectors == "g1") {
             filename <-
@@ -489,7 +516,7 @@ server <- function(input, output, session) {
         network <- visNetwork(
             nodes,
             edges,
-            main = titles[[input$sectors]],
+            #main = titles[[input$sectors]],
             width = "100%",
             height = "850px"
         ) %>%
@@ -565,7 +592,9 @@ server <- function(input, output, session) {
                                                                                            ) %>% rename("Total Connections" = "connections")
         
         
-        datatable(nodelist, options = list(pageLength = 15), height = "200px")
+        datatable(nodelist,
+                  options = list(pageLength = 15),
+                  height = "200px")
     })
 }
 
