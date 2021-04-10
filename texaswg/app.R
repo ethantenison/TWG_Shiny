@@ -26,6 +26,7 @@ library(rsconnect)
 library(shinyjs)
 library(shinydashboard)
 library(shinydashboardPlus)
+library(rintrojs)
 
 # ------------------------------- #
 # ------------------------------- #
@@ -155,6 +156,7 @@ header <-
     dashboardHeader(title = h2("Controls", align = "center"))
 
 sidebar <- dashboardSidebar(
+    introjsUI(),
     useShinyjs(),
     shinyjs::extendShinyjs(text = jsToggleFS, functions = "toggleFullScreen"),
     sidebarMenu(
@@ -166,13 +168,17 @@ sidebar <- dashboardSidebar(
         ),
         conditionalPanel(
             condition = "input.tabs == 'graph'",
+            div(id = "focus_select",
             selectInput(
                 "focus",
                 "Network Focus",
-                c("Connections and Organizations",
-                  "Connections",
-                  "Organizations ")
-            ),
+                c(
+                    "Connections and Organizations",
+                    "Connections",
+                    "Organizations "
+                )
+            )),
+            div(id = "sector_select",
             selectInput(
                 "sectors",
                 "Sector",
@@ -187,7 +193,8 @@ sidebar <- dashboardSidebar(
                     "Flooding" = "g1_flooding",
                     "Innovation" = "g1_innovation"
                 )
-            ),
+            )),
+            div(id = "switches",
             materialSwitch(
                 inputId = "edgenames",
                 label = "Connection Names",
@@ -201,7 +208,7 @@ sidebar <- dashboardSidebar(
                 status = "default",
                 right = TRUE,
                 value = TRUE
-            ),
+            )),
             actionButton(
                 "help",
                 "Tutorial",
@@ -233,7 +240,12 @@ sidebar <- dashboardSidebar(
         HTML(
             "<h4 style='color:#ffffff; padding: 3px 5px 5px 17px; display:block'><i class='fa fa-toolbox'></i> Dashboard Tools</h4>"
         ),
-        actionButton("show", "About Research", icon = icon("info-circle", class = "fa-pull-left"), style="color: #152934"),
+        actionButton(
+            "show",
+            "About Research",
+            icon = icon("info-circle", class = "fa-pull-left"),
+            style = "color: #152934"
+        ),
         HTML(
             "<button type='button' class='btn btn-default action-button shiny-bound-input' style='display: block; margin: 6px 5px 6px 15px; width: 200px;color: #152934;' onclick = 'shinyjs.toggleFullScreen();'><i class='fa fa-expand fa-pull-left'></i> Fullscreen</button>"
         ),
@@ -278,25 +290,25 @@ body <- dashboardBody(
                     HTML('<center><img src="images/logo2.png" width="700"></center>'),
                     hr()
                 ),
-                fluidRow(
-                    column(width = 12,
-                           box(
-                               title = textOutput("network_title"),
-                               width = 12,
-                               visNetworkOutput("twg_network", height = "700px"),
-                               absolutePanel(
-                                   id = "topbar",
-                                   fixed = TRUE,
-                                   draggable = FALSE,
-                                   top = "60%",
-                                   left = "80%",
-                                   right = "2.5%",
-                                   bottom = "40%",
-                                   imageOutput("legend", height = "300px")
-                                   
-                               )
-                           ))
-                )),
+                fluidRow(column(
+                    width = 12,
+                    box(
+                        title = textOutput("network_title"),
+                        width = 12,
+                        div(id = "visnetwork", visNetworkOutput("twg_network", height = "700px")),
+                        absolutePanel(
+                            id = "topbar",
+                            fixed = TRUE,
+                            draggable = FALSE,
+                            top = "60%",
+                            left = "78.5%",
+                            right = "1.5%",
+                            bottom = "40%",
+                            imageOutput("legend", height = "300px")
+                            
+                        )
+                    )
+                ))),
         tabItem(tabName = "table",
                 fluidRow(
                     HTML('<center><img src="images/logo2.png" width="700"></center>'),
@@ -308,7 +320,6 @@ body <- dashboardBody(
     )
 )
 ui <- dashboardPage(
-    skin = "blue",
     header = header,
     sidebar = sidebar,
     body = body
@@ -323,16 +334,53 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
     
-    output$network_title <- renderText({ titles[[input$sectors]] })
-    output$network_title_legend <- renderText({ "Network Graph Legend"})
+    
+    ######Introjs######
+    hintjs(session, options = list("hintButtonLabel"="Close This Hint"))
+    
+    observeEvent(input$help,
+                 rintrojs::introjs(session, options = list(
+                     steps = data.frame(element = c("#focus_select .form-group ",
+                                                    "#sector_select .form-group",
+                                                    "#switches .form-group",
+                                                    "#visnetwork"
+                     ),
+                     intro = c(includeMarkdown("tooltips/focus_select.md"),
+                               includeMarkdown("tooltips/sector_select.md"),
+                               includeMarkdown("tooltips/switches.md"),
+                               includeMarkdown("tooltips/visnetwork.md")
+
+                     ),
+                     position = c("auto",
+                                  "auto",
+                                  "auto",
+                                  "auto"
+
+                     )
+                     ),
+                     "nextLabel"="Next",
+                     "prevLabel"="Previous",
+                     "skipLabel"="Exit"),
+                     events = list("oncomplete"=I('alert("Thanks! Also, check out the Index for more information about the data represented here.")')))
+    )
+    
+    
+    ######Reactive Titles######
+    output$network_title <- renderText({
+        titles[[input$sectors]]
+    })
+    output$network_title_legend <-
+        renderText({
+            "Network Graph Legend"
+        })
     
     output$legend <- renderImage({
-        
         width  <- session$clientData$output_legend_width
         height <- session$clientData$output_legend_height
         
-        ######Organizations and Connections###### 
-        if (input$focus == "Connections and Organizations" & input$sectors == "g1") {
+        ######Organizations and Connections######
+        if (input$focus == "Connections and Organizations" &
+            input$sectors == "g1") {
             filename <-
                 normalizePath(file.path('./www/images/orgcon_sector.png'))
             
@@ -347,9 +395,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1_agriculture") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/orgcon_ag.png'
-                ))
+                normalizePath(file.path('./www/images/orgcon_ag.png'))
             
             list(
                 src = filename,
@@ -361,9 +407,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1_environment") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/orgcon_env.png'
-                ))
+                normalizePath(file.path('./www/images/orgcon_env.png'))
             
             list(
                 src = filename,
@@ -375,9 +419,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1_flooding") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/orgcon_flood.png'
-                ))
+                normalizePath(file.path('./www/images/orgcon_flood.png'))
             
             list(
                 src = filename,
@@ -389,9 +431,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1_groundwater") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/orgcon_gw.png'
-                ))
+                normalizePath(file.path('./www/images/orgcon_gw.png'))
             
             list(
                 src = filename,
@@ -403,9 +443,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1_innovation") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/orgcon_in.png'
-                ))
+                normalizePath(file.path('./www/images/orgcon_in.png'))
             
             list(
                 src = filename,
@@ -417,9 +455,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1_municipal") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/orgcon_mun.png'
-                ))
+                normalizePath(file.path('./www/images/orgcon_mun.png'))
             
             list(
                 src = filename,
@@ -431,9 +467,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1_oilandgas") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/orgcon_oilandgas.png'
-                ))
+                normalizePath(file.path('./www/images/orgcon_oilandgas.png'))
             
             list(
                 src = filename,
@@ -445,9 +479,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1_rural") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/orgcon_rural.png'
-                ))
+                normalizePath(file.path('./www/images/orgcon_rural.png'))
             
             list(
                 src = filename,
@@ -472,9 +504,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections" &
                  input$sectors == "g1_agriculture") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/con_ag.png'
-                ))
+                normalizePath(file.path('./www/images/con_ag.png'))
             
             list(
                 src = filename,
@@ -486,9 +516,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections" &
                  input$sectors == "g1_environment") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/con_env.png'
-                ))
+                normalizePath(file.path('./www/images/con_env.png'))
             
             list(
                 src = filename,
@@ -500,9 +528,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections" &
                  input$sectors == "g1_flooding") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/con_flooding.png'
-                ))
+                normalizePath(file.path('./www/images/con_flooding.png'))
             
             list(
                 src = filename,
@@ -514,9 +540,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections" &
                  input$sectors == "g1_groundwater") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/con_gw.png'
-                ))
+                normalizePath(file.path('./www/images/con_gw.png'))
             
             list(
                 src = filename,
@@ -528,9 +552,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections" &
                  input$sectors == "g1_innovation") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/con_in.png'
-                ))
+                normalizePath(file.path('./www/images/con_in.png'))
             
             list(
                 src = filename,
@@ -542,9 +564,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections" &
                  input$sectors == "g1_municipal") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/con_mun.png'
-                ))
+                normalizePath(file.path('./www/images/con_mun.png'))
             
             list(
                 src = filename,
@@ -556,9 +576,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections" &
                  input$sectors == "g1_oilandgas") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/con_oilandgas.png'
-                ))
+                normalizePath(file.path('./www/images/con_oilandgas.png'))
             
             list(
                 src = filename,
@@ -570,9 +588,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Connections" &
                  input$sectors == "g1_rural") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/con_rural.png'
-                ))
+                normalizePath(file.path('./www/images/con_rural.png'))
             
             list(
                 src = filename,
@@ -582,7 +598,7 @@ server <- function(input, output, session) {
             )
         }
         ######Just Organizations######
-        else if (input$focus == "Organizations "&
+        else if (input$focus == "Organizations " &
                  input$sectors == "g1") {
             filename <-
                 normalizePath(file.path('./www/images/org_all.png'))
@@ -597,9 +613,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Organizations " &
                  input$sectors == "g1_agriculture") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/org_ag.png'
-                ))
+                normalizePath(file.path('./www/images/org_ag.png'))
             
             list(
                 src = filename,
@@ -611,9 +625,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Organizations " &
                  input$sectors == "g1_environment") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/org_env.png'
-                ))
+                normalizePath(file.path('./www/images/org_env.png'))
             
             list(
                 src = filename,
@@ -625,9 +637,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Organizations " &
                  input$sectors == "g1_flooding") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/org_flood.png'
-                ))
+                normalizePath(file.path('./www/images/org_flood.png'))
             
             list(
                 src = filename,
@@ -639,9 +649,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Organizations " &
                  input$sectors == "g1_groundwater") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/org_gw.png'
-                ))
+                normalizePath(file.path('./www/images/org_gw.png'))
             
             list(
                 src = filename,
@@ -653,9 +661,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Organizations " &
                  input$sectors == "g1_innovation") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/org_in.png'
-                ))
+                normalizePath(file.path('./www/images/org_in.png'))
             
             list(
                 src = filename,
@@ -667,9 +673,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Organizations " &
                  input$sectors == "g1_municipal") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/org_mun.png'
-                ))
+                normalizePath(file.path('./www/images/org_mun.png'))
             
             list(
                 src = filename,
@@ -681,9 +685,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Organizations " &
                  input$sectors == "g1_oilandgas") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/org_oilandgas.png'
-                ))
+                normalizePath(file.path('./www/images/org_oilandgas.png'))
             
             list(
                 src = filename,
@@ -695,9 +697,7 @@ server <- function(input, output, session) {
         else if (input$focus == "Organizations " &
                  input$sectors == "g1_rural") {
             filename <-
-                normalizePath(file.path(
-                    './www/images/org_rural.png'
-                ))
+                normalizePath(file.path('./www/images/org_rural.png'))
             
             list(
                 src = filename,
@@ -730,9 +730,9 @@ server <- function(input, output, session) {
             )
         nodes$size <- nodes$size + 3 * 2
         
-         if (input$nodenames == FALSE) {
-             nodes$label <- ""
-         }
+        if (input$nodenames == FALSE) {
+            nodes$label <- ""
+        }
         
         edges <- gvis$edges
         edges$color[edges$type == "Water"] <- "#97c2fc"
@@ -784,7 +784,7 @@ server <- function(input, output, session) {
             "saves water for"
         
         edges$title <- paste(edges$from, edges$verb, edges$to)
-
+        
         
         if (input$edgenames == FALSE) {
             edges$label <- ""
@@ -806,13 +806,11 @@ server <- function(input, output, session) {
             edges$label <- edges$type
         }
         
-        network <- visNetwork(
-            nodes,
-            edges,
-            #main = titles[[input$sectors]],
-            width = "100%",
-            height = "850px"
-        ) %>%
+        network <- visNetwork(nodes,
+                              edges,
+                              #main = titles[[input$sectors]],
+                              width = "100%",
+                              height = "850px") %>%
             visEdges(
                 arrows = list(to = list(
                     enabled = TRUE, scaleFactor = .5
@@ -820,7 +818,7 @@ server <- function(input, output, session) {
                 color = list(highlight = "black"),
                 width = 3,
                 label = TRUE
-            ) %>% 
+            ) %>%
             visNodes(color = list(
                 background = "white",
                 border = "black",
