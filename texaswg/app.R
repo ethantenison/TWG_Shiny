@@ -111,9 +111,9 @@ data3 <- list(
 
 
 combined_data <- list(
-    "Edge Focused" = data,
-    "Edges and Nodes" = data2,
-    "Node Focused" = data3
+    "Connections" = data,
+    "Connections and Organizations" = data2,
+    "Organizations " = data3
 )
 
 
@@ -169,9 +169,9 @@ sidebar <- dashboardSidebar(
             selectInput(
                 "focus",
                 "Network Focus",
-                c("Edges and Nodes",
-                  "Edge Focused",
-                  "Node Focused")
+                c("Connections and Organizations",
+                  "Connections",
+                  "Organizations ")
             ),
             selectInput(
                 "sectors",
@@ -188,31 +188,19 @@ sidebar <- dashboardSidebar(
                     "Innovation" = "g1_innovation"
                 )
             ),
-            sliderInput(
-                "edge_width",
-                "Line Width",
-                min = 0,
-                max = 10,
-                value = 2
-            ),
-            sliderInput(
-                "node_size",
-                "Node Size",
-                min = 0,
-                max = 10,
-                value = 2
-            ),
-            prettySwitch(
-                "edgenames",
-                label = "Line Names",
-                bigger = FALSE,
+            materialSwitch(
+                inputId = "edgenames",
+                label = "Connection Names",
+                status = "default",
+                right = TRUE,
                 value = FALSE
             ),
-            prettySwitch(
-                "nodenames",
-                label = "Node Names",
-                bigger = FALSE,
-                value = FALSE
+            materialSwitch(
+                inputId = "nodenames",
+                label = "Organization Names",
+                status = "default",
+                right = TRUE,
+                value = TRUE
             ),
             actionButton(
                 "help",
@@ -245,6 +233,7 @@ sidebar <- dashboardSidebar(
         HTML(
             "<h4 style='color:#ffffff; padding: 3px 5px 5px 17px; display:block'><i class='fa fa-toolbox'></i> Dashboard Tools</h4>"
         ),
+        actionButton("show", "About Research", icon = icon("info-circle", class = "fa-pull-left"), style="color: #152934"),
         HTML(
             "<button type='button' class='btn btn-default action-button shiny-bound-input' style='display: block; margin: 6px 5px 6px 15px; width: 200px;color: #152934;' onclick = 'shinyjs.toggleFullScreen();'><i class='fa fa-expand fa-pull-left'></i> Fullscreen</button>"
         ),
@@ -286,25 +275,31 @@ body <- dashboardBody(
     tabItems(
         tabItem(tabName = "graph",
                 fluidRow(
-                    HTML('<center><img src="images/logo2.png" width="1000"></center>'),
+                    HTML('<center><img src="images/logo2.png" width="700"></center>'),
                     hr()
                 ),
                 fluidRow(
-                    column(width = 9,
+                    column(width = 12,
                            box(
                                title = textOutput("network_title"),
                                width = 12,
-                               visNetworkOutput("twg_network", height = "650px")
-                           )),
-                    column(width = 3,
-                           box(
-                               title = textOutput("network_title_legend"), 
-                               width = 12,
-                               imageOutput("legend")))
+                               visNetworkOutput("twg_network", height = "700px"),
+                               absolutePanel(
+                                   id = "topbar",
+                                   fixed = TRUE,
+                                   draggable = FALSE,
+                                   top = "60%",
+                                   left = "80%",
+                                   right = "2.5%",
+                                   bottom = "40%",
+                                   imageOutput("legend", height = "300px")
+                                   
+                               )
+                           ))
                 )),
         tabItem(tabName = "table",
                 fluidRow(
-                    HTML('<center><img src="images/logo2.png" width="1000"></center>'),
+                    HTML('<center><img src="images/logo2.png" width="700"></center>'),
                     hr()
                 ),
                 fluidRow(box(
@@ -332,12 +327,14 @@ server <- function(input, output, session) {
     output$network_title_legend <- renderText({ "Network Graph Legend"})
     
     output$legend <- renderImage({
-        if (input$focus == "Edges and Nodes" & input$sectors == "g1") {
+        
+        width  <- session$clientData$output_legend_width
+        height <- session$clientData$output_legend_height
+        
+        ######Organizations and Connections###### 
+        if (input$focus == "Connections and Organizations" & input$sectors == "g1") {
             filename <-
-                normalizePath(file.path('./www/images/full_network_sector_legend.png'))
-            
-            width  <- session$clientData$output_legend_width
-            height <- session$clientData$output_legend_height
+                normalizePath(file.path('./www/images/orgcon_sector.png'))
             
             list(
                 src = filename,
@@ -347,15 +344,12 @@ server <- function(input, output, session) {
             )
         }
         
-        else if (input$focus == "Edges and Nodes" &
-                 input$sectors != "g1") {
+        else if (input$focus == "Connections and Organizations" &
+                 input$sectors == "g1_agriculture") {
             filename <-
                 normalizePath(file.path(
-                    './www/images/full_network_sectorattributes_legend.png'
+                    './www/images/orgcon_ag.png'
                 ))
-            
-            width  <- session$clientData$output_legend_width
-            height <- session$clientData$output_legend_height
             
             list(
                 src = filename,
@@ -364,13 +358,109 @@ server <- function(input, output, session) {
                 height = height
             )
         }
-        else if (input$focus == "Edge Focused" &
+        else if (input$focus == "Connections and Organizations" &
+                 input$sectors == "g1_environment") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/orgcon_env.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections and Organizations" &
+                 input$sectors == "g1_flooding") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/orgcon_flood.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections and Organizations" &
+                 input$sectors == "g1_groundwater") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/orgcon_gw.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections and Organizations" &
+                 input$sectors == "g1_innovation") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/orgcon_in.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections and Organizations" &
+                 input$sectors == "g1_municipal") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/orgcon_mun.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections and Organizations" &
+                 input$sectors == "g1_oilandgas") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/orgcon_oilandgas.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections and Organizations" &
+                 input$sectors == "g1_rural") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/orgcon_rural.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        ######Just connections ######
+        else if (input$focus == "Connections" &
                  input$sectors == "g1") {
             filename <-
-                normalizePath(file.path('./www/images/edge_network_sector_legend.png'))
-            
-            width  <- session$clientData$output_legend_width
-            height <- session$clientData$output_legend_height
+                normalizePath(file.path('./www/images/con_sector.png'))
             
             list(
                 src = filename,
@@ -379,15 +469,12 @@ server <- function(input, output, session) {
                 height = height
             )
         }
-        else if (input$focus == "Edge Focused" &
-                 input$sectors != "g1") {
+        else if (input$focus == "Connections" &
+                 input$sectors == "g1_agriculture") {
             filename <-
                 normalizePath(file.path(
-                    './www/images/edge_network_sectorattributes_legend.png'
+                    './www/images/con_ag.png'
                 ))
-            
-            width  <- session$clientData$output_legend_width
-            height <- session$clientData$output_legend_height
             
             list(
                 src = filename,
@@ -396,12 +483,221 @@ server <- function(input, output, session) {
                 height = height
             )
         }
-        else if (input$focus == "Node Focused") {
+        else if (input$focus == "Connections" &
+                 input$sectors == "g1_environment") {
             filename <-
-                normalizePath(file.path('./www/images/node_network_legend.png'))
+                normalizePath(file.path(
+                    './www/images/con_env.png'
+                ))
             
-            width  <- session$clientData$output_legend_width
-            height <- session$clientData$output_legend_height
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections" &
+                 input$sectors == "g1_flooding") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/con_flooding.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections" &
+                 input$sectors == "g1_groundwater") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/con_gw.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections" &
+                 input$sectors == "g1_innovation") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/con_in.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections" &
+                 input$sectors == "g1_municipal") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/con_mun.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections" &
+                 input$sectors == "g1_oilandgas") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/con_oilandgas.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Connections" &
+                 input$sectors == "g1_rural") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/con_rural.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        ######Just Organizations######
+        else if (input$focus == "Organizations "&
+                 input$sectors == "g1") {
+            filename <-
+                normalizePath(file.path('./www/images/org_all.png'))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Organizations " &
+                 input$sectors == "g1_agriculture") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/org_ag.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Organizations " &
+                 input$sectors == "g1_environment") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/org_env.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Organizations " &
+                 input$sectors == "g1_flooding") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/org_flood.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Organizations " &
+                 input$sectors == "g1_groundwater") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/org_gw.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Organizations " &
+                 input$sectors == "g1_innovation") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/org_in.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Organizations " &
+                 input$sectors == "g1_municipal") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/org_mun.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Organizations " &
+                 input$sectors == "g1_oilandgas") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/org_oilandgas.png'
+                ))
+            
+            list(
+                src = filename,
+                alt = paste("test"),
+                width = width,
+                height = height
+            )
+        }
+        else if (input$focus == "Organizations " &
+                 input$sectors == "g1_rural") {
+            filename <-
+                normalizePath(file.path(
+                    './www/images/org_rural.png'
+                ))
             
             list(
                 src = filename,
@@ -418,6 +714,7 @@ server <- function(input, output, session) {
             toVisNetworkData(combined_data[[input$focus]][[input$sectors]])
         
         nodes <- sort(gvis$nodes)
+        nodes <- nodes %>% mutate(font.size = 20)
         nodes$title <-
             paste(
                 "<p>",
@@ -431,11 +728,11 @@ server <- function(input, output, session) {
                 nodes$size,
                 "</p>"
             )
-        nodes$size <- nodes$size + input$node_size * 2
+        nodes$size <- nodes$size + 3 * 2
         
-        if (input$nodenames == FALSE) {
-            nodes$label <- ""
-        }
+         if (input$nodenames == FALSE) {
+             nodes$label <- ""
+         }
         
         edges <- gvis$edges
         edges$color[edges$type == "Water"] <- "#97c2fc"
@@ -487,25 +784,21 @@ server <- function(input, output, session) {
             "saves water for"
         
         edges$title <- paste(edges$from, edges$verb, edges$to)
-        
-        
-        
-        
-        
+
         
         if (input$edgenames == FALSE) {
             edges$label <- ""
         }
-        else if (input$focus == "Edges and Nodes" &
+        else if (input$focus == "Connections and Organizations" &
                  input$sectors == "g1" |
-                 input$focus == "Edge Focused" &
+                 input$focus == "Connections" &
                  input$sectors == "g1" &
                  input$edgenames == TRUE) {
             edges$label <- edges$sector
             
         }
         
-        else if (input$focus == "Node Focused" &
+        else if (input$focus == "Organizations " &
                  input$edgenames == TRUE) {
             edges$label <- edges$sector
         }
@@ -525,9 +818,9 @@ server <- function(input, output, session) {
                     enabled = TRUE, scaleFactor = .5
                 )),
                 color = list(highlight = "black"),
-                width = input$edge_width,
+                width = 3,
                 label = TRUE
-            ) %>% #https://datastorm-open.github.io/visNetwork/edges.html
+            ) %>% 
             visNodes(color = list(
                 background = "white",
                 border = "black",
@@ -558,7 +851,7 @@ server <- function(input, output, session) {
     
     output$table <- renderDataTable({
         gvis <-
-            toVisNetworkData(combined_data[["Edges and Nodes"]][[input$sectors_table]])
+            toVisNetworkData(combined_data[["Connections and Organizations"]][[input$sectors_table]])
         nodelist <- gvis$nodes
         nodelist$size <- as.integer(nodelist$size)
         rownames(nodelist) <- NULL
