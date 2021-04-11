@@ -1,0 +1,1 @@
+The network focus selector allows you to switch between different network views. 

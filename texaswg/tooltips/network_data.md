@@ -1,0 +1,1 @@
+Click on the <i class="fa fa-project-diagram"></i> network data tab see organizational data in table form. 

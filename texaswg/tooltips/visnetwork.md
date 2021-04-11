@@ -1,0 +1,1 @@
+The network graph illustrates how different organizations in the Texas water sector are connected and interact with each other. 

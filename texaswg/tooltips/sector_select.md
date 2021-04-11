@@ -1,0 +1,1 @@
+The sector select allows you to zoom in specific sectors within the water governance network. 

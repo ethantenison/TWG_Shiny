@@ -1,0 +1,1 @@
+The organization and connection names can be toggled on or off. 
