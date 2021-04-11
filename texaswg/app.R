@@ -27,6 +27,7 @@ library(shinyjs)
 library(shinydashboard)
 library(shinydashboardPlus)
 library(rintrojs)
+library(bslib)
 
 # ------------------------------- #
 # ------------------------------- #
@@ -240,12 +241,13 @@ sidebar <- dashboardSidebar(
         HTML(
             "<h4 style='color:#ffffff; padding: 3px 5px 5px 17px; display:block'><i class='fa fa-toolbox'></i> Dashboard Tools</h4>"
         ),
-        actionButton(
+        div(id = "about_research", 
+            actionButton(
             "show",
             "About Research",
             icon = icon("info-circle", class = "fa-pull-left"),
             style = "color: #152934"
-        ),
+        )),
         HTML(
             "<button type='button' class='btn btn-default action-button shiny-bound-input' style='display: block; margin: 6px 5px 6px 15px; width: 200px;color: #152934;' onclick = 'shinyjs.toggleFullScreen();'><i class='fa fa-expand fa-pull-left'></i> Fullscreen</button>"
         ),
@@ -343,15 +345,21 @@ server <- function(input, output, session) {
                      steps = data.frame(element = c("#focus_select .form-group ",
                                                     "#sector_select .form-group",
                                                     "#switches .form-group",
-                                                    "#visnetwork"
+                                                    "#visnetwork",
+                                                    "#network_data",
+                                                    "#about_research .form-group"
                      ),
                      intro = c(includeMarkdown("tooltips/focus_select.md"),
                                includeMarkdown("tooltips/sector_select.md"),
                                includeMarkdown("tooltips/switches.md"),
-                               includeMarkdown("tooltips/visnetwork.md")
+                               includeMarkdown("tooltips/visnetwork.md"),
+                               includeMarkdown("tooltips/network_data.md"),
+                               includeMarkdown("tooltips/about_research.md")
 
                      ),
                      position = c("auto",
+                                  "auto",
+                                  "auto",
                                   "auto",
                                   "auto",
                                   "auto"
@@ -360,8 +368,10 @@ server <- function(input, output, session) {
                      ),
                      "nextLabel"="Next",
                      "prevLabel"="Previous",
-                     "skipLabel"="Exit"),
-                     events = list("oncomplete"=I('alert("Thanks! Also, check out the Index for more information about the data represented here.")')))
+                     "skipLabel"="Exit")#,
+                     #events = list("oncomplete"=I('alert("Thanks! Also, check out the Index for more information about the data represented here.")')
+                      #             )
+                     )
     )
     
     
