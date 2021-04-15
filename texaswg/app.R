@@ -186,7 +186,8 @@ sidebar <- dashboardSidebar(
                 c(
                     "All Sectors" = "g1",
                     "Agriculture" = "g1_agriculture",
-                    "Groundwater" = "g1_environment",
+                    "Environment" = "g1_environment",
+                    "Groundwater" = "g1_groundwater",
                     "Oil and Gas" = "g1_oilandgas",
                     "Rural Utilities" = "g1_rural",
                     "Municipal" = "g1_municipal",
@@ -228,11 +229,11 @@ sidebar <- dashboardSidebar(
                              c(
                                  "All Sectors" = "g1",
                                  "Agriculture" = "g1_agriculture",
-                                 "Groundwater" = "g1_environment",
+                                 "Environment" = "g1_environment",
+                                 "Groundwater" = "g1_groundwater",
                                  "Oil and Gas" = "g1_oilandgas",
                                  "Rural Utilities" = "g1_rural",
                                  "Municipal" = "g1_municipal",
-                                 "Environment" = "g1_environment",
                                  "Flooding" = "g1_flooding",
                                  "Innovation" = "g1_innovation"
                              )
