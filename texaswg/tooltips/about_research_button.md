@@ -1,0 +1,4 @@
+Water flows across all sectors of society and water governance challenges inherently involve multiple policy issues. Water governance includes a wide range of institutions, actors and many different contractual and regulatory mechanisms. In this research, we model and map the institutions and governance mechanisms of Texas water to elucidate and better understand the complex dynamics of the Texas water sector. This interactive map consists of institutions (agencies, actors and types of users) connected by different policy/governance mechanisms (authority, funding, regulation, etc.) across interdependent policy issues or subsectors. The research, analysis, and interactive visualizations were developed by Dr. Patrick Bixler, Regina Buono, and Ethan Tenison at the LBJ School of Public Affairs at the University of Texas.
+
+
+

@@ -1,0 +1,1 @@
+<i class="fas fa-download"></i> Click on the download button to view the full report. 

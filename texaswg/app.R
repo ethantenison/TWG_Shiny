@@ -249,6 +249,7 @@ sidebar <- dashboardSidebar(
             icon = icon("info-circle", class = "fa-pull-left"),
             style = "color: #152934"
         )),
+        downloadButton('downloadpdf', label = 'Download', style="display: block; margin: 0 auto; width: 200px;color: #152934;"),
         HTML(
             "<button type='button' class='btn btn-default action-button shiny-bound-input' style='display: block; margin: 6px 5px 6px 15px; width: 200px;color: #152934;' onclick = 'shinyjs.toggleFullScreen();'><i class='fa fa-expand fa-pull-left'></i> Fullscreen</button>"
         ),
@@ -290,7 +291,7 @@ body <- dashboardBody(
     tabItems(
         tabItem(tabName = "graph",
                 fluidRow(
-                    HTML('<center><img src="images/logo2.png" width="700"></center>'),
+                    HTML('<center><img src="images/logo3.png" width="800"></center>'),
                     hr()
                 ),
                 fluidRow(column(
@@ -348,17 +349,20 @@ server <- function(input, output, session) {
                                                     "#switches .form-group",
                                                     "#visnetwork",
                                                     "#network_data",
-                                                    "#about_research .form-group"
+                                                    "#about_research .form-group",
+                                                    "#download "
                      ),
                      intro = c(includeMarkdown("tooltips/focus_select.md"),
                                includeMarkdown("tooltips/sector_select.md"),
                                includeMarkdown("tooltips/switches.md"),
                                includeMarkdown("tooltips/visnetwork.md"),
                                includeMarkdown("tooltips/network_data.md"),
-                               includeMarkdown("tooltips/about_research.md")
+                               includeMarkdown("tooltips/about_research.md"),
+                               includeMarkdown("tooltips/download.md")
 
                      ),
                      position = c("auto",
+                                  "auto",
                                   "auto",
                                   "auto",
                                   "auto",
@@ -374,6 +378,25 @@ server <- function(input, output, session) {
                       #             )
                      )
     )
+    
+    ######About Research Button######
+    observeEvent(input$show, {
+        showModal(modalDialog(
+            title = "About this Research",
+            size = "l",
+            #footer = HTML("<a href='https://www.texaswater.org/'> Texas Water Foundation</a>"),
+            includeMarkdown("tooltips/about_research_button.md"),
+            easyClose = TRUE
+        ))
+    })
+    
+    ######Download Research Button######
+    output$downloadpdf <- downloadHandler(
+        filename = 'LBJTWF_Flows_of_Texas_Water.pdf', 
+        content = function(file) {
+            file.copy("www/LBJTWF_Flows_of_Texas_Water_Final_Report.pdf", file)
+        }
+    ) 
     
     
     ######Reactive Titles######
