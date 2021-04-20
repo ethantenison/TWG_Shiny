@@ -123,7 +123,8 @@ combined_data <- list(
 titles <- list(
     "g1" = "Network Graph - All Sectors" ,
     "g1_agriculture" = "Network Graph - Agriculture",
-    "g1_environment" = "Network Graph - Groundwater",
+    "g1_environment" = "Network Graph - Environment",
+    "g1_groundwater" = "Network Graph - Groundwater",
     "g1_oilandgas" = "Network Graph - Oil and Gas",
     "g1_rural" = "Network Graph - Rural Utilities",
     "g1_municipal" = "Network Graph - Municipal",
