@@ -289,6 +289,10 @@ body <- dashboardBody(
                                  }'
         )
     )),
+    tags$head(tags$style(
+        type="text/css",
+        "#legend img {max-width: 100%; width: 100%; height: auto}"
+    )),
     tabItems(
         tabItem(tabName = "graph",
                 fluidRow(
@@ -305,10 +309,10 @@ body <- dashboardBody(
                             id = "topbar",
                             fixed = TRUE,
                             draggable = FALSE,
-                            top = "60%",
+                            top = "70%",
                             left = "78.5%",
-                            right = "1.5%",
-                            bottom = "40%",
+                            #right = "1%",
+                            #bottom = "20%",
                             imageOutput("legend", height = "300px")
                             
                         )
